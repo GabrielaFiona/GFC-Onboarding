@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Onboarding - Gabriela Fiona</title>
+    <title>Client Onboarding - Build Structure</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- FLOATING INVOICE WIDGET (SHARED) -->
     <div id="floating-widget" class="collapsed">
         <div class="fw-header" onclick="toggleWidget()">
             <span>ESTIMATED TOTAL</span>
@@ -31,92 +34,134 @@
         </div>
     </div>
 
+    <!-- PROGRESS BAR (4 STEPS) -->
     <div class="progress-header">
         <div class="progress-bar">
             <div class="progress-line-bg"></div>
+            <!-- Step 2 out of 4 = 33.33% -->
             <div class="progress-line-fill" id="progress-fill" style="width:33.33%;"></div>
             
-            <div class="step-indicator completed" id="step-ind-1">1 <div class="step-label">Business Goals</div></div>
-            <div class="step-indicator active" id="step-ind-2">2 <div class="step-label">Build Structure</div></div>
-            <div class="step-indicator" id="step-ind-3">3 <div class="step-label">Action Plan</div></div>
-            <div class="step-indicator" id="step-ind-4">4 <div class="step-label">Finalize Plan</div></div>
+            <div class="step-indicator completed" id="step-ind-1">
+                1
+                <div class="step-label">Business Goals</div>
+            </div>
+            <div class="step-indicator active" id="step-ind-2">
+                2
+                <div class="step-label">Build Structure</div>
+            </div>
+            <div class="step-indicator" id="step-ind-3">
+                3
+                <div class="step-label">Action Plan</div>
+            </div>
+            <div class="step-indicator" id="step-ind-4">
+                4
+                <div class="step-label">Finalize Plan</div>
+            </div>
         </div>
     </div>
 
     <div class="container">
         <div id="step-2" class="step-section active">
             
+            <!-- INTRO -->
             <div class="intro-block">
                 <h1>Build Your Roadmap</h1>
-                <p>Select the foundation that fits your needs. We'll customize the details next.</p>
+                <p>
+                    On this step we’ll choose the right website foundation, map out your key pages, 
+                    and layer in any add-on services you need. This gives us a clear snapshot of your project scope.
+                </p>
             </div>
             
+            <!-- 1. BASE PACKAGES -->
             <h2 class="section-title">1. Choose a Base Package</h2>
+
             <div class="package-grid">
-                <div class="package-card" 
-                     onclick="selectPackage('basic', 'Basic Website', 750, 2, 425, 150, this)">
+                <!-- Package 1 -->
+                <div class="package-card"
+                     data-package-id="starter"
+                     onclick="selectPackage('starter', 'Starter Website', 1500, 5, 450, 150, this)">
                     <div class="package-img-placeholder"></div>
                     <div class="package-content">
-                        <span class="package-title">Basic Website</span>
-                        <span class="package-price">$750</span>
-                        <div class="package-meta">Includes 1-2 Pages | 5-7 Days</div>
-                        <p class="package-desc">Simple site, basic contact form, free Google subdomain. *No custom branding or domain setup included.*</p>
+                        <span class="package-title">Starter Website</span>
+                        <span class="package-price">$1,500</span>
+                        <div class="package-meta">Includes 5 Pages | 1–2 Weeks</div>
+                        <p class="package-desc">
+                            Perfect for portfolios and small service businesses. A clean, professional foundation to represent your brand online.
+                        </p>
                     </div>
                 </div>
 
-                <div class="package-card" 
-                     onclick="selectPackage('polished', 'Polished Brand Site', 2250, 4, 400, 175, this)">
+                <!-- Package 2 -->
+                <div class="package-card"
+                     data-package-id="growth"
+                     onclick="selectPackage('growth', 'Growth Business Site', 2800, 8, 500, 175, this)">
                     <div class="package-img-placeholder"></div>
                     <div class="package-content">
-                        <span class="package-title">Polished Brand Site</span>
-                        <span class="package-price">$2,250</span>
-                        <div class="package-meta">Includes up to 4 Pages | 2-3 Weeks</div>
-                        <p class="package-desc">A refined, branded Google Site with 2 rounds of revisions and light copy polish. Makes your business look established.</p>
+                        <span class="package-title">Growth Business Site</span>
+                        <span class="package-price">$2,800</span>
+                        <div class="package-meta">Includes 8 Pages | 2–3 Weeks</div>
+                        <p class="package-desc">
+                            Designed for lead generation. Includes blog setup, newsletter integration, and a stronger SEO foundation.
+                        </p>
                     </div>
                 </div>
 
-                <div class="package-card" 
-                     onclick="selectPackage('professional', 'Professional Website', 4000, 6, 375, 200, this)">
+                <!-- Package 3 -->
+                <div class="package-card"
+                     data-package-id="ecommerce"
+                     onclick="selectPackage('ecommerce', 'Full E-Commerce Site', 4500, 10, 550, 200, this)">
                     <div class="package-img-placeholder"></div>
                     <div class="package-content">
-                        <span class="package-title">Professional Website</span>
-                        <span class="package-price">$4,000</span>
-                        <div class="package-meta">Includes 6 Pages | 3-4 Weeks</div>
-                        <p class="package-desc">A high-end, fully custom-built, professional website built for functionality and growth (includes custom code/domain setup).</p>
+                        <span class="package-title">Full E-Commerce Site</span>
+                        <span class="package-price">$4,500</span>
+                        <div class="package-meta">Includes 10 Pages | 3–4 Weeks</div>
+                        <p class="package-desc">
+                            Built to sell products online. Includes full shop setup, payment integration, and inventory-friendly structure.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <h2 class="section-title" style="margin-top:50px;">Add: Foundational Branding</h2>
+            <!-- 2. WEBSITE ADD-ONS (keeps the old visual feel) -->
+            <h2 class="section-title" style="margin-top:50px;">2. Website Add-ons</h2>
+
+            <!-- Brand Kit (First Add-on) -->
             <div class="brand-kit-bar" id="brand-kit-bar" onclick="toggleBrandKit(this)">
                 <div class="kit-details">
                     <span class="kit-title">Brand Kit</span>
                     <p class="kit-features">
-                        Logo Suite, Brand Colors &amp; Typography, Brand Identity &amp; Target Customer. (1 Week duration)
+                        Logo Suite, Brand Colors &amp; Typography, Brand Identity &amp; Target Customer overview. (Approx. 1 week)
                     </p>
                 </div>
                 <div class="kit-price-block">
-                    <span class="og-price">$500</span> 
+                    <span class="og-price">$500</span>
                     <span class="discount-label">BUNDLE DISCOUNT APPLIED!</span>
-                    <div class="final-price">$500</div> 
+                    <div class="final-price">$500</div>
                 </div>
             </div>
-            
+
             <p style="font-size:0.85rem; color:var(--text-light); opacity:0.6; margin-top:20px;">
-                *Selecting a website package unlocks a bundled discount on the Brand Kit.*
+                *When bundled with a website package, the Brand Kit receives a custom discounted rate.*
             </p>
 
-            <div id="addons-section"> 
+            <div id="addons-section" class="hidden">
                 <hr class="divider">
-                
-                <h2 class="section-title">2. Build Site Structure</h2>
-                
+
+                <!-- SITEMAP BUILDER -->
+                <h3 class="section-subtitle">Your Sitemap (Pages)</h3>
                 <div class="sitemap-builder">
                     <h3>Your Sitemap (Pages)</h3>
-                    <p>Let's list the pages you need. Your package includes <strong id="included-pages-count">0</strong> pages. <br>Additional pages are $<span id="extra-page-unit-cost">150</span>/ea.</p>
-                    
+                    <p>
+                        Let’s list the pages you need. Your selected package includes
+                        <strong id="included-pages-count">0</strong> pages. <br>
+                        Additional pages are $<span id="extra-page-unit-cost">150</span>/ea.
+                    </p>
+
                     <div class="page-input-group">
-                        <input type="text" id="newPageName" placeholder="e.g. Services, About, Portfolio" onkeypress="handleEnter(event)">
+                        <input type="text"
+                               id="newPageName"
+                               placeholder="e.g. Services, About, Portfolio"
+                               onkeypress="handleEnter(event)">
                         <button class="btn btn-add" type="button" onclick="addPage()">+ Add Page</button>
                     </div>
 
@@ -127,56 +172,128 @@
                         <span class="extra-cost-tag" id="extra-page-cost" style="display:none;">+ Extra Cost: $0</span>
                     </div>
                 </div>
+
+                <!-- FUNCTIONALITY + SERVICES ADD-ONS -->
+                <div style="margin-top:40px;">
+                    <h3 class="section-subtitle">Functionality &amp; Services</h3>
+                    <p style="font-size:0.9rem; color:var(--text-light); opacity:0.7; margin-bottom:15px;">
+                        Add any extra support or functionality your site needs.
+                    </p>
+
+                    <div class="addons-list">
+                        <div class="addon-pill"
+                             data-addon-id="seo"
+                             onclick="toggleAddon('seo', 'Advanced SEO', 500, this)">
+                            <span>Advanced SEO</span>
+                            <span class="addon-price">+ $500</span>
+                        </div>
+
+                        <div class="addon-pill"
+                             data-addon-id="copy"
+                             onclick="toggleAddon('copy', 'Website Copywriting', 800, this)">
+                            <span>Website Copywriting</span>
+                            <span class="addon-price">+ $800</span>
+                        </div>
+
+                        <div class="addon-pill"
+                             data-addon-id="logo"
+                             onclick="toggleAddon('logo', 'Logo Refresh', 300, this)">
+                            <span>Logo Refresh</span>
+                            <span class="addon-price">+ $300</span>
+                        </div>
+
+                        <div class="addon-pill"
+                             data-addon-id="booking"
+                             onclick="toggleAddon('booking', 'Booking System Integration', 200, this)">
+                            <span>Booking System Integration</span>
+                            <span class="addon-price">+ $200</span>
+                        </div>
+
+                        <div class="addon-pill"
+                             data-addon-id="hosting"
+                             onclick="toggleAddon('hosting', 'Hosting &amp; Domain Setup', 300, this)">
+                            <span>Hosting &amp; Domain Setup</span>
+                            <span class="addon-price">+ $300</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <!-- NAV BUTTONS -->
             <div class="step-nav-buttons">
-                <button class="btn btn-secondary" type="button" onclick="nextStep(1)">&larr; Back: Business Goals</button>
-                <button class="btn btn-primary" type="button" onclick="nextStep(3)">Next: Set Action Plan &rarr;</button>
+                <button class="btn btn-secondary" type="button" onclick="nextStep(1)">
+                    &larr; Back: Business Goals
+                </button>
+                <button class="btn btn-primary" type="button" onclick="nextStep(3)">
+                    Next: Action Plan &rarr;
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- SHARED SCRIPT -->
     <script src="script.js"></script>
+
+    <!-- STEP 2 RESTORE LOGIC -->
     <script>
-    // When we land on Step 2, rebuild the UI from saved state if present
     document.addEventListener('DOMContentLoaded', function () {
+        // 1. Load saved state from localStorage
         if (window.loadState) {
             window.loadState();
         }
 
+        // 2. Restore package card selection & basic UI
         if (window.state && window.state.package) {
-            // Visually select the correct package card
-            const selectedCard = document.querySelector(`.package-card[onclick*="'${window.state.package.id}'"]`);
+            const pkg = window.state.package;
+
+            // highlight the selected package card
+            const selectedCard = document.querySelector(
+                '.package-card[data-package-id="' + pkg.id + '"]'
+            );
             if (selectedCard) {
                 selectedCard.classList.add('selected');
-                const addonsSection = document.getElementById('addons-section');
-                if (addonsSection) addonsSection.classList.remove('hidden');
             }
 
-            const includedPagesEl = document.getElementById('included-pages-count');
-            if (includedPagesEl) includedPagesEl.textContent = window.state.package.includedPages;
-
-            const unitCostEl = document.getElementById('extra-page-unit-cost');
-            if (unitCostEl && window.state.package.extraPageCost != null) {
-                unitCostEl.textContent = window.state.package.extraPageCost;
+            // show addons section once a package exists
+            const addonsSection = document.getElementById('addons-section');
+            if (addonsSection) {
+                addonsSection.classList.remove('hidden');
             }
 
+            // included pages + extra page rate
+            const incEl = document.getElementById('included-pages-count');
+            if (incEl) incEl.textContent = pkg.includedPages;
+
+            const rateEl = document.getElementById('extra-page-unit-cost');
+            if (rateEl && pkg.extraPageCost != null) {
+                rateEl.textContent = pkg.extraPageCost;
+            }
+
+            // Brand kit selection
             if (window.state.brandKit) {
                 const bar = document.getElementById('brand-kit-bar');
                 if (bar) bar.classList.add('selected');
             }
 
+            // Rebuild page list
             if (window.renderPageList) {
                 window.renderPageList();
             }
-        } else {
-            // No package yet – just show standard brand kit price
-            if (window.updateBrandKitDisplay) {
-                window.updateBrandKitDisplay();
-            }
         }
 
-        // Re-show the main goal from Step 1 in the widget
+        // 3. Restore add-on pills visual state
+        if (window.state && Array.isArray(window.state.addons)) {
+            window.state.addons.forEach(function (addon) {
+                const pill = document.querySelector(
+                    '.addon-pill[data-addon-id="' + addon.id + '"]'
+                );
+                if (pill) {
+                    pill.classList.add('selected');
+                }
+            });
+        }
+
+        // 4. Show main goal from Step 1 in widget (if set)
         const storedGoal = localStorage.getItem('mainGoal');
         if (storedGoal) {
             const goalDisplay = document.getElementById('fw-goal-display');
@@ -186,7 +303,10 @@
             }
         }
 
-        // Recalculate totals to ensure widget is accurate
+        // 5. Make sure Brand Kit price & invoice totals are correct
+        if (window.updateBrandKitDisplay) {
+            window.updateBrandKitDisplay();
+        }
         if (window.calculateTotal) {
             window.calculateTotal();
         }
