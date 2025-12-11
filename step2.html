@@ -16,8 +16,7 @@
             <span>ESTIMATED TOTAL</span>
             <span id="fw-header-total">$0</span>
         </div>
-        <div class="fw-goal" id="fw-goal-display" style="display: none;"></div>
-        
+        <div class="fw-goal" id="fw-goal-display" style="display:none;"></div>
         <div class="fw-content">
             <div id="fw-items">
                 <p class="empty-state">Select a package to start...</p>
@@ -35,7 +34,7 @@
     <div class="progress-header">
         <div class="progress-bar">
             <div class="progress-line-bg"></div>
-            <div class="progress-line-fill" id="progress-fill" style="width: 33.33%;"></div>
+            <div class="progress-line-fill" id="progress-fill" style="width:33.33%;"></div>
             
             <div class="step-indicator completed" id="step-ind-1">1 <div class="step-label">Business Goals</div></div>
             <div class="step-indicator active" id="step-ind-2">2 <div class="step-label">Build Structure</div></div>
@@ -45,7 +44,6 @@
     </div>
 
     <div class="container">
-
         <div id="step-2" class="step-section active">
             
             <div class="intro-block">
@@ -56,7 +54,7 @@
             <h2 class="section-title">1. Choose a Base Package</h2>
             <div class="package-grid">
                 <div class="package-card" 
-                     onclick="selectPackage('basic', 'Basic Website', 750, 2, 425, this)">
+                     onclick="selectPackage('basic', 'Basic Website', 750, 2, 425, 150, this)">
                     <div class="package-img-placeholder"></div>
                     <div class="package-content">
                         <span class="package-title">Basic Website</span>
@@ -65,8 +63,9 @@
                         <p class="package-desc">Simple site, basic contact form, free Google subdomain. *No custom branding or domain setup included.*</p>
                     </div>
                 </div>
+
                 <div class="package-card" 
-                     onclick="selectPackage('polished', 'Polished Brand Site', 2250, 4, 400, this)">
+                     onclick="selectPackage('polished', 'Polished Brand Site', 2250, 4, 400, 175, this)">
                     <div class="package-img-placeholder"></div>
                     <div class="package-content">
                         <span class="package-title">Polished Brand Site</span>
@@ -75,8 +74,9 @@
                         <p class="package-desc">A refined, branded Google Site with 2 rounds of revisions and light copy polish. Makes your business look established.</p>
                     </div>
                 </div>
+
                 <div class="package-card" 
-                     onclick="selectPackage('professional', 'Professional Website', 4000, 6, 375, this)">
+                     onclick="selectPackage('professional', 'Professional Website', 4000, 6, 375, 200, this)">
                     <div class="package-img-placeholder"></div>
                     <div class="package-content">
                         <span class="package-title">Professional Website</span>
@@ -87,14 +87,12 @@
                 </div>
             </div>
 
-            <h2 class="section-title" style="margin-top: 50px;">
-                Add: Foundational Branding
-            </h2>
+            <h2 class="section-title" style="margin-top:50px;">Add: Foundational Branding</h2>
             <div class="brand-kit-bar" id="brand-kit-bar" onclick="toggleBrandKit(this)">
                 <div class="kit-details">
                     <span class="kit-title">Brand Kit</span>
                     <p class="kit-features">
-                        Logo Suite, Brand Colors & Typography, Brand Identity & Target Customer. (1 Week duration)
+                        Logo Suite, Brand Colors &amp; Typography, Brand Identity &amp; Target Customer. (1 Week duration)
                     </p>
                 </div>
                 <div class="kit-price-block">
@@ -104,7 +102,7 @@
                 </div>
             </div>
             
-            <p style="font-size: 0.85rem; color: var(--text-light); opacity: 0.6; margin-top: 20px;">
+            <p style="font-size:0.85rem; color:var(--text-light); opacity:0.6; margin-top:20px;">
                 *Selecting a website package unlocks a bundled discount on the Brand Kit.*
             </p>
 
@@ -119,11 +117,10 @@
                     
                     <div class="page-input-group">
                         <input type="text" id="newPageName" placeholder="e.g. Services, About, Portfolio" onkeypress="handleEnter(event)">
-                        <button class="btn btn-add" onclick="addPage()">+ Add Page</button>
+                        <button class="btn btn-add" type="button" onclick="addPage()">+ Add Page</button>
                     </div>
 
-                    <div id="page-list" class="page-list">
-                        </div>
+                    <div id="page-list" class="page-list"></div>
 
                     <div class="page-summary">
                         <span>Total Pages: <span id="total-page-count">0</span></span>
@@ -132,99 +129,68 @@
                 </div>
             </div>
 
-            <div class="step-nav-buttons" style="justify-content: space-between;">
-                <button class="btn btn-secondary" onclick="nextStep(1)">&larr; Back: Business Goals</button>
-                <button class="btn btn-primary" onclick="nextStep(3)">Next: Set Action Plan &rarr;</button>
+            <div class="step-nav-buttons">
+                <button class="btn btn-secondary" type="button" onclick="nextStep(1)">&larr; Back: Business Goals</button>
+                <button class="btn btn-primary" type="button" onclick="nextStep(3)">Next: Set Action Plan &rarr;</button>
             </div>
         </div>
-
     </div>
 
     <script src="script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Load the state from local storage
-    loadState();
-
-    // 2. If package data exists, restore the UI based on the loaded state
-    if (window.state && window.state.package) {
-        const selectedCard = document.querySelector(`.package-card[onclick*="'${window.state.package.id}'"]`);
-        if (selectedCard) {
-            selectedCard.classList.add('selected');
-            document.getElementById('addons-section').classList.remove('hidden');
+    <script>
+    // When we land on Step 2, rebuild the UI from saved state if present
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.loadState) {
+            window.loadState();
         }
 
-        document.getElementById('extra-page-unit-cost').innerText = window.state.package.extraPageCost;
-        document.getElementById('included-pages-count').innerText = window.state.package.includedPages;
-
-        if(window.state.brandKit) {
-            document.getElementById('brand-kit-bar').classList.add('selected');
-        }
-
-        window.state.addons.forEach(addon => {
-            const addonPill = document.querySelector(`.addon-pill[onclick*="'${addon.id}'"]`);
-            if(addonPill) addonPill.classList.add('selected');
-        });
-
-        updateBrandKitDisplay();
-        renderPageList();
-        calculateTotal();
-    } else {
-        // Initialize Brand Kit bar to standard price
-        document.getElementById('brand-kit-bar')
-            .querySelector('.final-price')
-            .innerText = '$' + BASE_BRAND_KIT_PRICE.toLocaleString();
-    }
-
-    // 3. Show goal from Step 1 (if set there)
-    const storedGoal = localStorage.getItem('mainGoal');
-    if (storedGoal) {
-        const goalDisplay = document.getElementById('fw-goal-display');
-        if (goalDisplay) {
-            goalDisplay.innerText = 'Goal: ' + storedGoal;
-            goalDisplay.style.display = 'block';
-        }
-    }
-});
-
-        // --- STEP-SPECIFIC LOGIC ---
-        
-        // This is necessary to initialize the view and load any existing state upon arrival at Step 2
-        document.addEventListener('DOMContentLoaded', function() {
-            // Placeholder: This assumes state variables (like state.package) from Step 1 are carried over 
-            // via local storage or server data in a production environment. 
-            // We call calculateTotal and updateBrandKitDisplay to refresh the UI if data exists.
-            
-            // To prevent issues when navigating back and forth:
-            if (window.state && window.state.package) {
-                // If a package is already selected, visually mark the card
-                const selectedCard = document.querySelector(`.package-card[onclick*="'${window.state.package.id}'"]`);
-                if (selectedCard) {
-                    selectedCard.classList.add('selected');
-                }
-                updateBrandKitDisplay();
-                renderPageList();
-                calculateTotal();
-            } else {
-                 // Initialize Brand Kit bar to show standard price if no package is selected
-                document.getElementById('brand-kit-bar').querySelector('.final-price').innerText = '$' + BASE_BRAND_KIT_PRICE.toLocaleString();
+        if (window.state && window.state.package) {
+            // Visually select the correct package card
+            const selectedCard = document.querySelector(`.package-card[onclick*="'${window.state.package.id}'"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                const addonsSection = document.getElementById('addons-section');
+                if (addonsSection) addonsSection.classList.remove('hidden');
             }
-        });
-        
-        // Note: The global functions like nextStep and updateGoalTracker 
-        // will be included from the external script.js file. 
-        // They are defined in the step1.html's inline script in the complete setup.
 
-        // Simulating the global script functions needed on this page:
-        function nextStep(step) {
-            // Placeholder logic to prevent errors, actual logic should be centralized
-            alert('Navigation to Step ' + step + ' is not fully implemented yet.');
+            const includedPagesEl = document.getElementById('included-pages-count');
+            if (includedPagesEl) includedPagesEl.textContent = window.state.package.includedPages;
+
+            const unitCostEl = document.getElementById('extra-page-unit-cost');
+            if (unitCostEl && window.state.package.extraPageCost != null) {
+                unitCostEl.textContent = window.state.package.extraPageCost;
+            }
+
+            if (window.state.brandKit) {
+                const bar = document.getElementById('brand-kit-bar');
+                if (bar) bar.classList.add('selected');
+            }
+
+            if (window.renderPageList) {
+                window.renderPageList();
+            }
+        } else {
+            // No package yet – just show standard brand kit price
+            if (window.updateBrandKitDisplay) {
+                window.updateBrandKitDisplay();
+            }
         }
 
-        function toggleWidget() {
-            // Placeholder logic to prevent errors, actual logic should be centralized
-            document.getElementById('floating-widget').classList.toggle('collapsed');
+        // Re-show the main goal from Step 1 in the widget
+        const storedGoal = localStorage.getItem('mainGoal');
+        if (storedGoal) {
+            const goalDisplay = document.getElementById('fw-goal-display');
+            if (goalDisplay) {
+                goalDisplay.textContent = 'Goal: ' + storedGoal;
+                goalDisplay.style.display = 'block';
+            }
         }
+
+        // Recalculate totals to ensure widget is accurate
+        if (window.calculateTotal) {
+            window.calculateTotal();
+        }
+    });
     </script>
 </body>
 </html>
