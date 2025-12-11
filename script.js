@@ -41,61 +41,38 @@ function nextStep(stepNumber) {
 }
 
 // --- PACKAGE SELECTION ---
-function selectPackage(
-    id,
-    name,
-    price,
-    includedPages,
-    brandKitBundlePrice,
-    extraPageCost,
-    element
-) {
-    // Visually select
-    document.querySelectorAll('.package-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-    if (element) {
-        element.classList.add('selected');
-    }
+function selectPackage(id, name, price, includedPages, brandKitBundlePrice, extraPageCost, element) {
+    // 1. Visual selection
+    document.querySelectorAll('.package-card').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
 
-    // Update state
+    // 2. Update state with the chosen package
     state.package = {
         id,
         name,
         price,
         includedPages,
         brandKitBundlePrice,
-        extraPageCost
+        extraPageCost // package-specific extra page cost
     };
 
-    // Update UI text
+    // 3. Update UI text (included pages + extra-page rate), if elements exist
     const includedPagesEl = document.getElementById('included-pages-count');
-    if (includedPagesEl) includedPagesEl.textContent = includedPages;
+    if (includedPagesEl) includedPagesEl.innerText = includedPages;
 
-    const unitCostEl = document.getElementById('extra-page-unit-cost');
-    if (unitCostEl && extraPageCost != null) {
-        unitCostEl.textContent = extraPageCost;
-    }
+    const extraPageCostEl = document.getElementById('extra-page-unit-cost');
+    if (extraPageCostEl) extraPageCostEl.innerText = extraPageCost;
 
+    // 4. Reveal the addons / sitemap section (but do NOT scroll)
     const addonsSection = document.getElementById('addons-section');
     if (addonsSection) addonsSection.classList.remove('hidden');
 
-    // Reveal invoice widget
-    const widget = document.getElementById('floating-widget');
-    if (widget && widget.classList.contains('collapsed')) {
-        widget.classList.remove('collapsed');
-    }
-
-    // Scroll to addons
-    if (addonsSection) {
-        setTimeout(() => {
-            addonsSection.scrollIntoView({ behavior: 'smooth' });
-        }, 200);
-    }
-
-    updateBrandKitDisplay();
+    // 5. Recalculate totals, but leave the widget collapsed unless you open it
     calculateTotal();
+
+    // 6. Optionally persist immediately
     saveState();
+    updateBrandKitDisplay();
 }
 
 // --- BRAND KIT ---
