@@ -763,3 +763,16 @@ select option {
         grid-template-columns: 1fr;
     }
 }
+
+/* --- FIX: Brand Kit as its own card under the packages (no overlap) --- */
+.package-stack {
+    position: static;
+    margin-bottom: 40px;
+}
+
+.brand-kit-bar {
+    position: static;
+    margin: 30px 0 0;      /* normal spacing under the package grid */
+    max-width: 100%;       /* full width inside the container */
+    border-radius: 8px;    /* match card style */
+}
