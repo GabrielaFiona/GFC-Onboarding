@@ -228,7 +228,49 @@ select option {
     color: var(--text-light);
 }
 
-/* --- BUTTONS (Omitted for brevity, no changes needed) --- */
+/* --- BUTTONS --- */
+.btn {
+    padding: 16px 32px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    /* FIX: REMOVED margin-top: 20px; */
+}
+
+.btn-primary { 
+    background: var(--accent-blue); 
+    color: #fff; 
+    box-shadow: 0 4px 15px rgba(31, 127, 181, 0.3);
+}
+.btn-primary:hover { 
+    background: #166a9c; 
+    transform: translateY(-2px);
+}
+.btn-secondary { 
+    background: transparent; 
+    color: var(--text-light); 
+    border: 1px solid var(--border); 
+    opacity: 0.7;
+}
+.btn-secondary:hover { 
+    opacity: 1; 
+    border-color: var(--accent-blue); 
+    color: var(--accent-blue); 
+}
+
+/* New container for step navigation buttons */
+.step-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    /* FIX: Added margin here instead of on .btn */
+    margin-top: 50px; 
+}
 
 /* --- FLOATING WIDGET (INVOICE PAPER LOOK) --- */
 #floating-widget {
@@ -237,7 +279,7 @@ select option {
     right: 30px;
     width: 280px;
     background: var(--text-light); 
-    color: var(--bg-dark); /* Default widget text color is dark */
+    color: var(--bg-dark); 
     border-radius: 2px;
     box-shadow: 0 0 30px rgba(0,0,0,0.5);
     z-index: 1000;
@@ -248,14 +290,12 @@ select option {
 
 .fw-header {
     background: #dcdfe0;
-    /* FIX: Explicitly setting the color ensures black text */
     color: var(--bg-dark); 
     padding: 15px 20px;
     display: flex;
-    /* FIX: Centering alignment */
-    justify-content: center; 
+    justify-content: center; /* Centering alignment */
     align-items: center;
-    gap: 10px; /* Space between label and total */
+    gap: 10px;
     cursor: pointer;
     font-family: var(--font-body);
     font-size: 0.8rem;
@@ -267,7 +307,7 @@ select option {
 /* Style for the Goal Tracker */
 .fw-goal {
     font-size: 0.7rem;
-    color: #444; /* Dark gray for subtle contrast on light background */
+    color: #444; 
     font-weight: 500;
     margin: 5px 20px 10px 20px; 
     padding-bottom: 10px;
@@ -310,36 +350,3 @@ select option {
 
 /* Helper */
 .hidden { display: none !important; }
-/* style.css */
-
-/* ... (Omitted existing styles) ... */
-
-/* --- BUTTONS --- */
-.btn {
-    padding: 16px 32px;
-    border: none;
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    /* Removed default margin-top from here */
-    /* margin-top: 20px; */
-}
-/* New container for step navigation buttons */
-.step-nav-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 50px; /* Consistent spacing above the buttons */
-    padding-top: 20px; /* Gives space for buttons that use a top margin */
-}
-
-/* Specific styling for buttons inside the step navigation container */
-.step-nav-buttons .btn {
-    margin-top: 0; /* Ensures the buttons are aligned cleanly within the container */
-}
-
-/* ... (Omitted remaining CSS) ... */
