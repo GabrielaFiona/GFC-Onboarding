@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <!-- FLOATING INVOICE WIDGET -->
+    <!-- FLOATING INVOICE WIDGET (shared) -->
     <div id="floating-widget" class="collapsed">
         <div class="fw-header" onclick="toggleWidget()">
             <span>ESTIMATED TOTAL</span>
@@ -72,9 +72,9 @@
                 </p>
                 <p style="font-size:0.85rem; color:var(--text-light); opacity:0.8; max-width:700px;">
                     <em>
-                        Included in <strong>all</strong> website packages: strategy call (up to 2 hours), 
+                        Included in <strong>all</strong> website packages: strategy call (up to 2 hours),
                         30 days after-launch support (fixing bugs, small content tweaks, “how do I…?” questions,
-                        and occasional mini trainings), plus mobile-optimized development, Google Analytics, and basic SEO. 
+                        and occasional mini trainings), plus mobile-optimized development, Google Analytics, and basic SEO.
                         After that window, additional work follows your add-ons/hourly rates.
                     </em>
                 </p>
@@ -84,38 +84,39 @@
             <h2 class="section-title">1. Choose a Website Package</h2>
 
             <div class="package-stack">
-                <!-- PACKAGE CARDS (each with an image area at the top) -->
+                <!-- PACKAGE GRID (3 boxes) -->
                 <div class="package-grid">
 
                     <!-- BASIC WEBSITE -->
-                    <div class="package-card"
+                    <div class="package-card basic-card"
                          onclick="selectPackage('basic', 'Basic Website', 750, 2, 425, 150, this)">
                         <div class="package-img-placeholder">
-                            <!-- TODO: replace this with an image, e.g.:
-                            <img src="images/basic-website.jpg" alt="Basic Website Preview" style="width:100%; height:100%; object-fit:cover;">
-                            or set a background-image in CSS for this card -->
+                            <!-- Optional: replace with image, e.g.
+                            <img src="images/basic-website.jpg" alt="Basic Website Preview">
+                            -->
                         </div>
                         <div class="package-content">
                             <span class="package-title">Basic Website</span>
                             <span class="package-price">$750</span>
                             <div class="package-meta">Simple site · 1–2 pages · 5–7 days</div>
                             <p class="package-desc">
-                                A clean, functional Google Site with essential business information, a basic contact form, 
+                                A clean, functional Google Site with essential business information, a basic contact form,
                                 and your client-provided logo and copy added for you.
                                 <br><br>
-                                <strong>Included:</strong> simple Google Site (1–2 pages), basic contact form, 
+                                <strong>Included:</strong> simple Google Site (1–2 pages), basic contact form,
                                 free Google Site URL/subdomain, basic SEO, and Google Analytics.
                                 <br>
-                                <strong>Best for:</strong> new businesses or freelancers needing a simple online presence — 
+                                <strong>Best for:</strong> new businesses or freelancers needing a simple online presence —
                                 essentially an online business card with a contact option.
                                 <br><br>
-                                <strong>Suggested add-ons:</strong> extra page +$150, domain connection +$75, 
-                                light copy polish +$75/page, or <em>Full Page From Scratch</em> (copy + SEO + build) at 
+                                <strong>Suggested add-ons:</strong> extra page +$150, domain connection +$75,
+                                light copy polish +$75/page, or <em>Full Page From Scratch</em> (copy + SEO + build) at
                                 <strong>$250 per page</strong>.
                                 <br>
                                 <strong>Brand Kit bundle:</strong> $425 (15% off).
                                 <br>
-                                <strong>Revisions:</strong> 1 round of consolidated revisions.
+                                <strong>Revisions:</strong> 1 round of consolidated revisions
+                                (one list of text tweaks, image swaps, and minor layout changes).
                                 <br>
                                 <strong>After-launch support:</strong> 30 days, up to ~1 hour of small content tweaks total.
                             </p>
@@ -123,10 +124,10 @@
                     </div>
 
                     <!-- POLISHED BRAND SITE -->
-                    <div class="package-card"
+                    <div class="package-card polished-card"
                          onclick="selectPackage('polished', 'Polished Brand Site', 2250, 4, 400, 175, this)">
                         <div class="package-img-placeholder">
-                            <!-- Replace with your image if desired -->
+                            <!-- Optional image here -->
                         </div>
                         <div class="package-content">
                             <span class="package-title">Polished Brand Site</span>
@@ -135,52 +136,57 @@
                             <p class="package-desc">
                                 A refined, branded Google Site with a polished, professional layout and light copy polish.
                                 <br><br>
-                                <strong>Included:</strong> custom-designed Google Site (up to 4 pages), branded layout, 
+                                <strong>Included:</strong> custom-designed Google Site (up to 4 pages), branded layout,
                                 basic SEO, and free Google Site URL/subdomain.
                                 <br>
-                                <strong>Best for:</strong> businesses ready to look established and trustworthy online 
+                                <strong>Best for:</strong> businesses ready to look established and trustworthy online
                                 with an on-brand home base.
                                 <br><br>
-                                <strong>Suggested add-ons:</strong> additional page +$175, simple booking integration +$250, 
-                                or <em>Full Page From Scratch</em> (copy + SEO + build) at <strong>$300 per page</strong>.
+                                <strong>Suggested add-ons:</strong> additional page +$175, simple booking integration +$250,
+                                or <em>Full Page From Scratch</em> (copy + SEO + build) at
+                                <strong>$300 per page</strong>.
                                 <br>
                                 <strong>Brand Kit bundle:</strong> $400 (20% off).
                                 <br>
-                                <strong>Revisions:</strong> 2 rounds of consolidated revisions.
+                                <strong>Revisions:</strong> 2 rounds of consolidated revisions
+                                (each = one list of text tweaks, image swaps, and minor layout edits).
                                 <br>
-                                <strong>After-launch support:</strong> 30 days, up to ~2 hours of tweaks, plus 
-                                1 × 30-min follow-up call around week 3–4 to review analytics & answer questions.
+                                <strong>After-launch support:</strong> 30 days, up to ~2 hours of tweaks,
+                                plus 1 × 30-min follow-up call around week 3–4 to review analytics & answer questions.
                             </p>
                         </div>
                     </div>
 
                     <!-- PROFESSIONAL WEBSITE -->
-                    <div class="package-card"
+                    <div class="package-card pro-card"
                          onclick="selectPackage('professional', 'Professional Website', 4000, 6, 375, 200, this)">
                         <div class="package-img-placeholder">
-                            <!-- Replace with your image if desired -->
+                            <!-- Optional image here -->
                         </div>
                         <div class="package-content">
                             <span class="package-title">Professional Website</span>
                             <span class="package-price">$4,000</span>
                             <div class="package-meta">Fully custom-coded · 6 pages · 3–4 weeks</div>
                             <p class="package-desc">
-                                A high-end, fully custom-built professional website with custom CSS, stronger SEO, and domain setup.
+                                A high-end, fully custom-built professional website with custom CSS, stronger SEO,
+                                and domain setup.
                                 <br><br>
-                                <strong>Included:</strong> fully custom-coded site (6 pages), custom CSS, basic SEO, and domain setup.
+                                <strong>Included:</strong> fully custom-coded site (6 pages), custom CSS,
+                                basic SEO, and domain setup.
                                 <br>
-                                <strong>Best for:</strong> modern, growing businesses that need bookings, analytics, 
+                                <strong>Best for:</strong> modern, growing businesses that need bookings, analytics,
                                 and a stronger SEO base.
                                 <br><br>
                                 <strong>Suggested add-ons:</strong> extra page +$200, blog setup +$250,
-                                or <em>Full Page From Scratch</em> (copy + SEO + build) at <strong>$350 per page</strong>.
+                                or <em>Full Page From Scratch</em> (copy + SEO + build) at
+                                <strong>$350 per page</strong>.
                                 <br>
                                 <strong>Brand Kit bundle:</strong> $375 (25% off).
                                 <br>
-                                <strong>Revisions:</strong> up to 3 rounds (design + content + functionality).
+                                <strong>Revisions:</strong> up to 3 rounds total (design + content + functionality).
                                 <br>
-                                <strong>After-launch support:</strong> 45 days, up to ~3 hours of tweaks and refinements,
-                                plus 1 × 45-min follow-up call & basic analytics review.
+                                <strong>After-launch support:</strong> 45 days, up to ~3 hours of tweaks and refinements
+                                (content + functionality), plus 1 × 45-min follow-up call & basic analytics review.
                             </p>
                         </div>
                     </div>
@@ -196,14 +202,15 @@
                             <br>
                             <strong>Logo Suite:</strong> primary, secondary, and icon logo in multiple formats.
                             <br>
-                            <strong>Brand Colors &amp; Typography:</strong> 4–6 brand colors and 3–4 fonts 
+                            <strong>Brand Colors &amp; Typography:</strong> 4–6 brand colors and 3–4 fonts
                             in a simple PDF guide, plus business card design.
                             <br>
-                            <strong>Brand Identity &amp; Target Customer:</strong> brand persona, ideal audience, 
+                            <strong>Brand Identity &amp; Target Customer:</strong> brand persona, ideal audience,
                             mission, tone, and guidance on how to use it.
                             <br><br>
-                            <strong>Standalone:</strong> $500 · approx. 1 week. When bundled with a site package, 
-                            your price updates automatically in the invoice (Basic: $425, Polished: $400, Professional: $375).
+                            <strong>Standalone:</strong> $500 · approx. 1 week.
+                            When bundled with a website package, the Brand Kit will apply your special package rate
+                            (Basic: $425, Polished: $400, Professional: $375) in the invoice.
                         </p>
                     </div>
                     <div class="kit-price-block">
@@ -214,7 +221,7 @@
                 </div>
             </div> <!-- /package-stack -->
 
-            <!-- 2. PAGE BUILDER + ADD-ONS -->
+            <!-- SECTION 2: PAGES + ADD-ONS -->
             <hr class="divider">
 
             <h2 class="section-title">2. Website Structure &amp; Add-ons</h2>
@@ -225,7 +232,7 @@
                 <p>
                     Let’s list the pages you need. Your selected package includes
                     <strong id="included-pages-count">0</strong> pages.
-                    Additional pages are 
+                    Additional pages are
                     $<span id="extra-page-unit-cost">150</span>/ea for standard additional pages.
                 </p>
 
@@ -315,7 +322,7 @@
             window.loadState();
         }
 
-        // Restore selected package and UI
+        // Restore selected package & UI
         if (window.state && window.state.package) {
             const pkg = window.state.package;
 
@@ -361,7 +368,7 @@
             });
         }
 
-        // Restore main goal from Step 1
+        // Show stored goal from Step 1 in the widget
         const storedGoal = localStorage.getItem('mainGoal');
         if (storedGoal) {
             const goalDisplay = document.getElementById('fw-goal-display');
@@ -371,7 +378,7 @@
             }
         }
 
-        // Update Brand Kit & totals
+        // Make sure Brand Kit visuals & totals are correct
         if (window.updateBrandKitDisplay) {
             window.updateBrandKitDisplay();
         }
