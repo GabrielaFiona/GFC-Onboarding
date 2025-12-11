@@ -141,7 +141,52 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Load the state from local storage
+    loadState();
+
+    // 2. If package data exists, restore the UI based on the loaded state
+    if (window.state && window.state.package) {
+        const selectedCard = document.querySelector(`.package-card[onclick*="'${window.state.package.id}'"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+            document.getElementById('addons-section').classList.remove('hidden');
+        }
+
+        document.getElementById('extra-page-unit-cost').innerText = window.state.package.extraPageCost;
+        document.getElementById('included-pages-count').innerText = window.state.package.includedPages;
+
+        if(window.state.brandKit) {
+            document.getElementById('brand-kit-bar').classList.add('selected');
+        }
+
+        window.state.addons.forEach(addon => {
+            const addonPill = document.querySelector(`.addon-pill[onclick*="'${addon.id}'"]`);
+            if(addonPill) addonPill.classList.add('selected');
+        });
+
+        updateBrandKitDisplay();
+        renderPageList();
+        calculateTotal();
+    } else {
+        // Initialize Brand Kit bar to standard price
+        document.getElementById('brand-kit-bar')
+            .querySelector('.final-price')
+            .innerText = '$' + BASE_BRAND_KIT_PRICE.toLocaleString();
+    }
+
+    // 3. Show goal from Step 1 (if set there)
+    const storedGoal = localStorage.getItem('mainGoal');
+    if (storedGoal) {
+        const goalDisplay = document.getElementById('fw-goal-display');
+        if (goalDisplay) {
+            goalDisplay.innerText = 'Goal: ' + storedGoal;
+            goalDisplay.style.display = 'block';
+        }
+    }
+});
+
         // --- STEP-SPECIFIC LOGIC ---
         
         // This is necessary to initialize the view and load any existing state upon arrival at Step 2
