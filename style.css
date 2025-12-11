@@ -310,3 +310,36 @@ select option {
 
 /* Helper */
 .hidden { display: none !important; }
+/* style.css */
+
+/* ... (Omitted existing styles) ... */
+
+/* --- BUTTONS --- */
+.btn {
+    padding: 16px 32px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    /* Removed default margin-top from here */
+    /* margin-top: 20px; */
+}
+/* New container for step navigation buttons */
+.step-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px; /* Consistent spacing above the buttons */
+    padding-top: 20px; /* Gives space for buttons that use a top margin */
+}
+
+/* Specific styling for buttons inside the step navigation container */
+.step-nav-buttons .btn {
+    margin-top: 0; /* Ensures the buttons are aligned cleanly within the container */
+}
+
+/* ... (Omitted remaining CSS) ... */
