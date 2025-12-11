@@ -317,6 +317,71 @@ select option {
     margin-top: 5px; 
     text-align: right;
 }
+/* style.css */
+
+/* ... (Omitted existing :root, *, body, TYPOGRAPHY) ... */
+
+/* HEADER & PROGRESS */
+.progress-header {
+    /* ... (existing styles) ... */
+    display: flex;
+    justify-content: center;
+}
+.progress-bar {
+    display: flex;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    justify-content: space-between; /* Ensures even spacing for 4 steps */
+}
+.progress-line-bg {
+    /* ... (existing styles) ... */
+}
+.progress-line-fill {
+    /* ... (existing styles) ... */
+    /* Starting width is 0% for Step 1. Transitions will use 33.33%, 66.66%, 100% */
+    width: 0%; 
+}
+.step-indicator {
+    /* ... (existing styles) ... */
+}
+.step-indicator.active {
+    /* ... (existing styles) ... */
+}
+.step-indicator.completed {
+    /* ... (existing styles) ... */
+}
+.step-label {
+    /* ... (existing styles) ... */
+}
+
+/* ... (Omitted LAYOUT, STEP 1 SPECIFIC, FORMS, BUTTONS) ... */
+
+/* FLOATING WIDGET (Add new style for goal tracker) */
+#floating-widget {
+    /* ... (existing styles) ... */
+}
+.fw-header {
+    /* ... (existing styles) ... */
+}
+/* New style for displaying the chosen goal */
+.fw-goal {
+    font-size: 0.7rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+    margin-top: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.8;
+}
+/* ... (Omitted fw-content, fw-item, fw-total, fw-deposit) ... */
+
+/* ... (Omitted remaining CSS) ... */
 
 /* Helper */
 .hidden { display: none !important; }
