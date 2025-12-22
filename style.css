@@ -829,3 +829,808 @@ select option {
         grid-template-columns: 1fr;
     }
 }
+:root {
+    /* YOUR PALETTE */
+    --bg-dark: #03030B;      /* Main Background */
+    --accent-blue: #1F7FB5;  /* Buttons, Highlights, Progress Fill */
+    --text-light: #E5EBEA;   /* Main Text Color */
+    
+    /* Calculated variations for depth */
+    --surface: #0f0f1a;      /* Slightly lighter dark for cards */
+    --border: #2a2a35;       /* Subtle borders */
+    --input-bg: #1a1a24;     /* ADJUSTED: Slightly brighter dark input background for readability */
+    
+    /* Fonts */
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    background-color: var(--bg-dark); 
+    color: var(--text-light); 
+    font-family: var(--font-body); 
+    padding-bottom: 120px; 
+    line-height: 1.6;
+}
+
+/* --- TYPOGRAPHY --- */
+h1, h2, h3 { font-family: var(--font-heading); color: var(--text-light); }
+h1 { font-size: 3rem; font-weight: 300; margin-bottom: 10px; letter-spacing: 0.5px; }
+h2 { font-size: 2rem; margin-bottom: 20px; font-weight: 400; color: var(--accent-blue); }
+h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: 10px; }
+p { margin-bottom: 20px; font-weight: 300; font-size: 1.05rem; opacity: 0.9; }
+
+/* --- PROGRESS HEADER --- */
+.progress-header {
+    position: sticky;
+    top: 0;
+    background: rgba(3, 3, 11, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    padding: 25px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+}
+.progress-bar {
+    display: flex;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    justify-content: space-between;
+}
+.progress-line-bg {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    z-index: 1;
+}
+.progress-line-fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 1px;
+    background: var(--accent-blue);
+    box-shadow: 0 0 10px var(--accent-blue);
+    z-index: 2;
+    width: 0%; 
+    transition: width 0.5s ease;
+}
+.step-indicator {
+    position: relative;
+    z-index: 3;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+.step-indicator.active {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(31, 127, 181, 0.2);
+}
+.step-indicator.completed {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+}
+.step-label {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    color: var(--text-light);
+    opacity: 0.7;
+}
+
+/* --- LAYOUT --- */
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 25px;
+}
+.step-section {
+    display: none;
+    animation: fadeIn 0.6s ease;
+}
+.step-section.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- STEP 1 SPECIFIC --- */
+.welcome-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+    align-items: center;
+}
+.timeline {
+    position: relative;
+    border-left: 1px solid var(--border);
+    padding-left: 30px;
+}
+.timeline-item {
+    margin-bottom: 30px;
+    position: relative;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -35px; 
+    top: 6px;
+    width: 9px;
+    height: 9px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(31, 127, 181, 0.5);
+}
+.timeline-item h4 {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+.timeline-item p {
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--text-light);
+    opacity: 0.6;
+}
+
+/* --- FORMS --- */
+.intake-card {
+    background: var(--surface);
+    padding: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+.full-width { grid-column: span 2; }
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    color: var(--accent-blue);
+}
+input, select, textarea {
+    width: 100%;
+    padding: 15px;
+    background: var(--input-bg); 
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-light);
+    transition: all 0.3s;
+}
+input::placeholder, textarea::placeholder {
+    color: var(--text-light);
+    opacity: 0.5;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(31, 127, 181, 0.1);
+}
+
+/* Custom styles for select dropdown to look good in dark mode */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23E5EBEA%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px auto;
+}
+
+/* FIX: Ensure dropdown options use light text on dark background */
+select option {
+    background: var(--input-bg);
+    color: var(--text-light);
+}
+
+/* --- BUTTONS --- */
+.btn {
+    padding: 16px 32px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary { 
+    background: var(--accent-blue); 
+    color: #fff; 
+    box-shadow: 0 4px 15px rgba(31, 127, 181, 0.3);
+}
+.btn-primary:hover { 
+    background: #166a9c; 
+    transform: translateY(-2px);
+}
+.btn-secondary { 
+    background: transparent; 
+    color: var(--text-light); 
+    border: 1px solid var(--border); 
+    opacity: 0.7;
+}
+.btn-secondary:hover { 
+    opacity: 1; 
+    border-color: var(--accent-blue); 
+    color: var(--accent-blue); 
+}
+
+/* New container for step navigation buttons */
+.step-nav-buttons {
+    display: flex;
+    gap: 15px; 
+    justify-content: space-between;
+    margin-top: 50px; 
+}
+
+/* --- FLOATING WIDGET (INVOICE PAPER LOOK) --- */
+#floating-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 280px;
+    background: var(--text-light); 
+    color: var(--bg-dark); 
+    border-radius: 2px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 0.9rem;
+}
+#floating-widget.collapsed { transform: translateY(calc(100% - 50px)); }
+
+.fw-header {
+    background: #dcdfe0;
+    color: var(--bg-dark); 
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Style for the Goal Tracker */
+.fw-goal {
+    font-size: 0.7rem;
+    color: #444; 
+    font-weight: 500;
+    margin: 5px 20px 10px 20px; 
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.9;
+}
+
+.fw-content { padding: 20px; max-height: 400px; overflow-y: auto; }
+.fw-item { 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 0.85rem; 
+    margin-bottom: 8px; 
+    color: #333; 
+    border-bottom: 1px dashed #ccc; 
+    padding-bottom: 5px;
+}
+.fw-total { 
+    margin-top: 15px; 
+    padding-top: 10px; 
+    display: flex; 
+    justify-content: space-between; 
+    font-weight: 700; 
+    font-family: var(--font-heading); 
+    font-size: 1.1rem; 
+    color: #000; 
+    border-top: 2px solid #333;
+}
+.fw-deposit { 
+    font-size: 0.75rem; 
+    color: #555; 
+    margin-top: 5px; 
+    text-align: right;
+}
+
+/* Helper */
+.hidden { display: none !important; }
+
+/* --- STEP 1: WELCOME + TIMELINE + INTAKE FORM --- */
+
+.welcome-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+    align-items: center;
+}
+
+.timeline {
+    position: relative;
+    border-left: 1px solid var(--border);
+    padding-left: 30px;
+}
+.timeline-item {
+    margin-bottom: 30px;
+    position: relative;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -35px; 
+    top: 6px;
+    width: 9px;
+    height: 9px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(31, 127, 181, 0.5);
+}
+.timeline-item h4 {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+.timeline-item p {
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--text-light);
+    opacity: 0.6;
+}
+
+.intake-card {
+    background: var(--surface);
+    padding: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+.full-width { grid-column: span 2; }
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+    color: var(--accent-blue);
+}
+input, select, textarea {
+    width: 100%;
+    padding: 15px;
+    background: var(--input-bg); 
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-light);
+    transition: all 0.3s;
+}
+input::placeholder, textarea::placeholder {
+    color: var(--text-light);
+    opacity: 0.5;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(31, 127, 181, 0.1);
+}
+
+/* Dark-mode select dropdown */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23E5EBEA%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px auto;
+}
+select option {
+    background: var(--input-bg);
+    color: var(--text-light);
+}
+/* =========================================================
+   STEP 2: PACKAGES + BRAND KIT + PAGE BUILDER + ADD-ONS
+   ========================================================= */
+
+/* Shared section heading for Step 2  */
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: var(--accent-blue);
+    margin: 40px 0 20px;
+}
+
+/* Simple intro area used on Step 2 */
+.intro-block {
+    margin-bottom: 40px;
+}
+
+/* Divider line between main blocks */
+.divider {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 50px 0 30px;
+}
+
+/* ---------- PACKAGE CARD GRID + STACK ---------- */
+
+/* Wrapper so package cards appear on a "shelf" above Brand Kit */
+.package-stack {
+    position: relative;
+    margin-bottom: 70px;
+}
+
+/* Grid holding the three packages */
+.package-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-bottom: 0; /* Brand Kit will visually tuck under this */
+}
+
+/* Individual package card */
+.package-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.package-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+.package-card.selected {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 22px rgba(31, 127, 181, 0.4);
+}
+
+/* IMAGE / VISUAL AREA AT TOP OF CARD */
+.package-img-placeholder {
+    height: 130px;
+    background: radial-gradient(circle at top left, rgba(31,127,181,0.3), transparent),
+                radial-gradient(circle at bottom right, rgba(255,255,255,0.06), transparent);
+    border-bottom: 1px solid var(--border);
+}
+
+/* If you add an <img> inside, make it fill the placeholder nicely */
+.package-img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Content area under the image */
+.package-content {
+    padding: 18px 18px 20px;
+}
+
+.package-title {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+}
+
+.package-price {
+    float: right;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--accent-blue);
+    margin-left: 8px;
+}
+
+.package-meta {
+    font-size: 0.8rem;
+    opacity: 0.75;
+    margin-bottom: 10px;
+}
+
+.package-desc {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    clear: both;
+}
+
+/* ---------- BRAND KIT BAR (RECTANGLE BASE) ---------- */
+
+.brand-kit-bar {
+    position: relative;
+    z-index: 1;
+    margin: -30px auto 0; /* pull up so cards look like they sit on it */
+    max-width: 900px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 26px 24px 22px;
+    display: grid;
+    grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.brand-kit-bar:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 24px rgba(31, 127, 181, 0.25);
+}
+
+.brand-kit-bar.selected {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 30px rgba(31, 127, 181, 0.4);
+}
+
+.kit-details .kit-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+}
+
+.kit-details .kit-features {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* Price stack on right side of Brand Kit */
+.kit-price-block {
+    text-align: right;
+}
+
+.kit-price-block .og-price {
+    display: none; /* turned on by JS when bundle price is active */
+    font-size: 0.85rem;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.kit-price-block .discount-label {
+    display: none;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-blue);
+    margin-bottom: 4px;
+}
+
+.kit-price-block .final-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+}
+
+/* ---------- PAGE BUILDER (SITEMAP) ---------- */
+
+.sitemap-builder {
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 24px 22px;
+    margin-top: 10px;
+}
+
+.sitemap-builder h3 {
+    margin-bottom: 6px;
+}
+
+.sitemap-builder p {
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+    opacity: 0.85;
+}
+
+.page-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.page-input-group input {
+    flex: 1;
+}
+
+.page-list {
+    margin-top: 10px;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+}
+
+.page-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+
+.remove-page {
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+.remove-page:hover {
+    opacity: 1;
+}
+
+.page-summary {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.extra-cost-tag {
+    font-size: 0.78rem;
+    color: var(--accent-blue);
+}
+
+/* ---------- ADD-ON PILL LIST ---------- */
+
+.addons-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.addon-pill {
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.01);
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.addon-pill:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 12px rgba(31, 127, 181, 0.4);
+    transform: translateY(-1px);
+}
+
+.addon-pill.selected {
+    background: rgba(31, 127, 181, 0.15);
+    border-color: var(--accent-blue);
+}
+
+.addon-name {
+    font-weight: 500;
+}
+
+.addon-price {
+    opacity: 0.8;
+}
+
+/* ---------- RESPONSIVE TWEAKS ---------- */
+
+@media (max-width: 768px) {
+    .brand-kit-bar {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    .kit-price-block {
+        text-align: left;
+    }
+
+    .container {
+        margin: 30px auto;
+        padding: 0 18px;
+    }
+
+    .welcome-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- FIX: Brand Kit as its own card under the packages (no overlap) --- */
+.package-stack {
+    position: static;
+    margin-bottom: 40px;
+}
+
+.brand-kit-bar {
+    position: static;
+    margin: 30px 0 0;      /* normal spacing under the package grid */
+    max-width: 100%;       /* full width inside the container */
+    border-radius: 8px;    /* match card style */
+}
+/* Wrap the pages + functionality cards as two separate "bubbles" */
+.addons-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 10px;
+}
+
+/* =========================================================
+   STEP 1: SYSTEMS ADD-ONS AS PILLS
+   (Reuses Step 2 .addons-list / .addon-pill styling)
+   ========================================================= */
+.systems-pill-list {
+    /* uses .addons-list layout; this class is just for scoping */
+}
+
+.systems-pill-list .addon-pill {
+    position: relative; /* allow visually-hidden input without layout shift */
+}
+
+/* Hide checkbox but keep it accessible for screen readers / keyboard */
+.systems-pill-list .addon-pill input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
