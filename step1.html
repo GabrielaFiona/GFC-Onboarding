@@ -58,6 +58,15 @@
 <div class="container">
     <div id="step-1" class="step-section active">
 
+        <!-- NEW: GOAL SUMMARY AT TOP (shows selected goals only, no notes) -->
+        <div id="goal-summary" class="goal-summary-bar" style="display:none;">
+            <div class="goal-summary-title">Selected Goals</div>
+            <div class="goal-summary-chips">
+                <span id="goal-chip-website" class="goal-chip" style="display:none;"></span>
+                <span id="goal-chip-business" class="goal-chip" style="display:none;"></span>
+            </div>
+        </div>
+
         <div class="welcome-grid">
             <div class="welcome-text">
                 <h1>Welcome.</h1>
@@ -186,6 +195,12 @@
                         <span class="addon-name">CRM</span>
                     </label>
                 </div>
+
+                <!-- NEW: Notes for systems add-ons -->
+                <div style="margin-top:18px;">
+                    <label>Systems Add-ons Notes (Optional)</label>
+                    <textarea id="systemsAddonsNotes" rows="3" class="save-me" placeholder="Anything specific you want integrated (tools, preferences, or requirements)?"></textarea>
+                </div>
             </div>
 
             <div class="step-nav-buttons" style="justify-content:flex-end;">
@@ -228,21 +243,50 @@ document.addEventListener('DOMContentLoaded', function () {
 function updateGoalTracker() {
     const websiteGoalEl = document.getElementById('websiteGoal');
     const businessGoalEl = document.getElementById('businessGoal');
-    const goalDisplay = document.getElementById('fw-goal-display');
-    if (!goalDisplay) return;
 
     const websiteGoal = websiteGoalEl ? websiteGoalEl.value : '';
     const businessGoal = businessGoalEl ? businessGoalEl.value : '';
 
-    let text = '';
-    if (websiteGoal) text += 'Website Goal: ' + websiteGoal;
-    if (businessGoal) text += (text ? '  •  ' : '') + 'Business Goal: ' + businessGoal;
+    // 1) Update the floating widget goal display (existing behavior)
+    const goalDisplay = document.getElementById('fw-goal-display');
+    if (goalDisplay) {
+        let text = '';
+        if (websiteGoal) text += 'Website Goal: ' + websiteGoal;
+        if (businessGoal) text += (text ? '  •  ' : '') + 'Business Goal: ' + businessGoal;
 
-    if (text) {
-        goalDisplay.textContent = text;
-        goalDisplay.style.display = 'block';
-    } else {
-        goalDisplay.style.display = 'none';
+        if (text) {
+            goalDisplay.textContent = text;
+            goalDisplay.style.display = 'block';
+        } else {
+            goalDisplay.style.display = 'none';
+        }
+    }
+
+    // 2) Update the top-of-page Goal Summary (NEW)
+    const summary = document.getElementById('goal-summary');
+    const chipWebsite = document.getElementById('goal-chip-website');
+    const chipBusiness = document.getElementById('goal-chip-business');
+
+    const any = !!(websiteGoal || businessGoal);
+
+    if (summary) summary.style.display = any ? 'flex' : 'none';
+
+    if (chipWebsite) {
+        if (websiteGoal) {
+            chipWebsite.textContent = 'Website Goal: ' + websiteGoal;
+            chipWebsite.style.display = 'inline-flex';
+        } else {
+            chipWebsite.style.display = 'none';
+        }
+    }
+
+    if (chipBusiness) {
+        if (businessGoal) {
+            chipBusiness.textContent = 'Business Goal: ' + businessGoal;
+            chipBusiness.style.display = 'inline-flex';
+        } else {
+            chipBusiness.style.display = 'none';
+        }
     }
 }
 
@@ -298,6 +342,7 @@ function resetForm() {
         localStorage.removeItem('businessGoal');
         localStorage.removeItem('businessGoalNotes');
         localStorage.removeItem('systemsAddons');
+        localStorage.removeItem('systemsAddonsNotes');  // NEW
         localStorage.removeItem('onboardingState');
         location.reload();
     }
@@ -306,4 +351,3 @@ function resetForm() {
 
 </body>
 </html>
-
