@@ -6,7 +6,8 @@ const state = {
   pages: [],
   addons: [],
   pagePlans: {},
-  brandingProvided: null
+  brandingProvided: null,
+  customBranding: { active: false, name: "", price: 0 }
 };
 
 const BASE_BRAND_KIT_PRICE = 500;
@@ -85,7 +86,9 @@ function toggleBrandingPanels(value) {
   saveState();
 }
 
-// FILE UPLOAD HANDLER
+// FILE UPLOAD & DOWNLOAD
+let uploadedFiles = []; // Store file references in memory
+
 function handleFileUpload(e) {
   const files = e.target.files;
   const box = document.getElementById('file-staging-box');
@@ -98,15 +101,75 @@ function handleFileUpload(e) {
   
   box.classList.remove('hidden');
   list.innerHTML = ''; 
+  uploadedFiles = Array.from(files); // Save for download all
 
-  Array.from(files).forEach(file => {
+  uploadedFiles.forEach(file => {
     const row = document.createElement('div');
     row.className = 'file-list-item';
     const nameSpan = document.createElement('span');
     nameSpan.textContent = file.name;
+    
+    // Individual Download Link
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = file.name;
+    link.className = 'btn-download-mini';
+    link.textContent = 'Download';
+    
     row.appendChild(nameSpan);
+    row.appendChild(link);
     list.appendChild(row);
   });
+}
+
+function downloadAllFiles() {
+  if (uploadedFiles.length === 0) {
+    alert("No files to download.");
+    return;
+  }
+  // Trigger download for each file
+  uploadedFiles.forEach(file => {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+}
+
+// CUSTOM BRANDING LOGIC
+function toggleCustomBrandingUI(panelId) {
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.toggle('hidden');
+}
+
+function updateCustomBrandingState() {
+  // We sync inputs from both panels (Yes and No)
+  // Use the inputs that are currently visible or just query all and take the one with value
+  const names = document.querySelectorAll('.custom-brand-name');
+  const prices = document.querySelectorAll('.custom-brand-price');
+  
+  let nameVal = "";
+  let priceVal = 0;
+
+  names.forEach(input => { if(input.value) nameVal = input.value; });
+  prices.forEach(input => { if(input.value) priceVal = Number(input.value); });
+  
+  // Sync all inputs to match (so switching Yes/No keeps the data)
+  names.forEach(input => input.value = nameVal);
+  prices.forEach(input => input.value = priceVal || "");
+
+  state.customBranding = {
+    active: (priceVal > 0),
+    name: nameVal || "Custom Branding",
+    price: priceVal
+  };
+  
+  calculateTotal();
+  saveState();
 }
 
 // PAGE BUILDER
@@ -123,6 +186,17 @@ function initPageBuilder() {
       radio.checked = true;
       toggleBrandingPanels(state.brandingProvided);
     }
+  }
+
+  // Restore Custom Branding
+  if (state.customBranding && state.customBranding.price > 0) {
+     const names = document.querySelectorAll('.custom-brand-name');
+     const prices = document.querySelectorAll('.custom-brand-price');
+     names.forEach(i => i.value = state.customBranding.name);
+     prices.forEach(i => i.value = state.customBranding.price);
+     
+     // Open panels
+     document.querySelectorAll('.custom-panel').forEach(p => p.classList.remove('hidden'));
   }
 
   if (!input) return;
@@ -235,6 +309,7 @@ function calculateTotal() {
     }
   }
 
+  // BRAND KIT
   if (state.brandKit) {
     let kitPrice = BASE_BRAND_KIT_PRICE;
     let label = 'Brand Kit';
@@ -244,6 +319,12 @@ function calculateTotal() {
     }
     html += `<div class="fw-item"><span>+ ${label}</span><span>$${kitPrice.toLocaleString()}</span></div>`;
     total += kitPrice;
+  }
+
+  // CUSTOM BRANDING
+  if (state.customBranding && state.customBranding.price > 0) {
+    html += `<div class="fw-item"><span>+ ${state.customBranding.name}</span><span>$${state.customBranding.price.toLocaleString()}</span></div>`;
+    total += state.customBranding.price;
   }
 
   state.addons.forEach(addon => {
@@ -387,7 +468,7 @@ function saveAdvancedNotes(text) {
   saveState();
 }
 
-// --- CANVAS TOOLS & LOGIC ---
+// --- CANVAS TOOLS ---
 const canvasState = {}; 
 
 function setTool(groupName, tool, btn) {
@@ -536,30 +617,36 @@ function downloadMockups(pageName, mobileId, desktopId) {
 
 function toggleBrandKit(element) {
   state.brandKit = !state.brandKit;
-  if (element) element.classList.toggle('selected', state.brandKit);
+  // Visual update handled by refreshing both cards if they exist
+  document.querySelectorAll('.brand-kit-ref').forEach(el => {
+    el.classList.toggle('selected', state.brandKit);
+  });
+  
   calculateTotal();
   updateBrandKitDisplay();
   saveState();
 }
 
 function updateBrandKitDisplay() {
-  const bar = document.getElementById('brand-kit-bar');
-  if (!bar) return;
-  const ogPriceEl = bar.querySelector('.og-price');
-  const discountLabelEl = bar.querySelector('.discount-label');
-  const finalPriceEl = bar.querySelector('.final-price');
-  if (!finalPriceEl) return;
-  const hasBundle = !!(state.package && state.package.brandKitBundlePrice);
-  const displayPrice = hasBundle ? Number(state.package.brandKitBundlePrice) : BASE_BRAND_KIT_PRICE;
-  if (hasBundle && displayPrice !== BASE_BRAND_KIT_PRICE) {
-    if (ogPriceEl) { ogPriceEl.textContent = `$${BASE_BRAND_KIT_PRICE.toLocaleString()}`; ogPriceEl.style.display = 'inline'; }
-    if (discountLabelEl) discountLabelEl.style.display = 'block';
-  } else {
-    if (ogPriceEl) ogPriceEl.style.display = 'none';
-    if (discountLabelEl) discountLabelEl.style.display = 'none';
-  }
-  finalPriceEl.textContent = `$${displayPrice.toLocaleString()}`;
-  bar.classList.toggle('selected', !!state.brandKit);
+  document.querySelectorAll('.brand-kit-ref').forEach(bar => {
+    const ogPriceEl = bar.querySelector('.bk-og-price');
+    const discountLabelEl = bar.querySelector('.bk-discount-label');
+    const finalPriceEl = bar.querySelector('.bk-final-price');
+    if (!finalPriceEl) return;
+    
+    const hasBundle = !!(state.package && state.package.brandKitBundlePrice);
+    const displayPrice = hasBundle ? Number(state.package.brandKitBundlePrice) : BASE_BRAND_KIT_PRICE;
+    
+    if (hasBundle && displayPrice !== BASE_BRAND_KIT_PRICE) {
+      if (ogPriceEl) { ogPriceEl.textContent = `$${BASE_BRAND_KIT_PRICE.toLocaleString()}`; ogPriceEl.style.display = 'inline'; }
+      if (discountLabelEl) discountLabelEl.style.display = 'block';
+    } else {
+      if (ogPriceEl) ogPriceEl.style.display = 'none';
+      if (discountLabelEl) discountLabelEl.style.display = 'none';
+    }
+    finalPriceEl.textContent = `$${displayPrice.toLocaleString()}`;
+    bar.classList.toggle('selected', !!state.brandKit);
+  });
 }
 
 function toggleWidget() {
