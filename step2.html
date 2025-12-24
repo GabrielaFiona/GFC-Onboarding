@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,391 +7,423 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-    <!-- FLOATING INVOICE WIDGET (shared) -->
-    <div id="floating-widget" class="collapsed">
-        <div class="fw-header" onclick="toggleWidget()">
-            <span>ESTIMATED TOTAL</span>
-            <span id="fw-header-total">$0</span>
+<body class="step2">
+
+<!-- FLOATING INVOICE WIDGET (shared) -->
+<div id="floating-widget" class="collapsed">
+    <div class="fw-header" onclick="toggleWidget()">
+        <span>ESTIMATED TOTAL</span>
+        <span id="fw-header-total">$0</span>
+    </div>
+    <div class="fw-content">
+        <div id="fw-items">
+            <p class="empty-state">Select a package to start...</p>
         </div>
-        <div class="fw-goal" id="fw-goal-display" style="display:none;"></div>
-        <div class="fw-content">
-            <div id="fw-items">
-                <p class="empty-state">Select a package to start...</p>
-            </div>
-            <div class="fw-total">
-                <span>Total Investment</span>
-                <span id="fw-full-total">$0</span>
-            </div>
-            <div class="fw-deposit">
-                50% Deposit: <span id="fw-deposit">$0</span>
-            </div>
+        <div class="fw-total">
+            <span>Total Investment</span>
+            <span id="fw-full-total">$0</span>
+        </div>
+        <div class="fw-deposit">
+            50% Deposit: <span id="fw-deposit">$0</span>
         </div>
     </div>
+</div>
 
-    <!-- PROGRESS BAR (4 steps) -->
-    <div class="progress-header">
-        <div class="progress-bar">
-            <div class="progress-line-bg"></div>
-            <!-- Step 2 / 4 -->
-            <div class="progress-line-fill" id="progress-fill" style="width:33.33%;"></div>
+<!-- PROGRESS BAR (4 steps) -->
+<div class="progress-header">
+    <div class="progress-bar">
+        <div class="progress-line-bg"></div>
+        <div class="progress-line-fill" id="progress-fill" style="width:33.33%;"></div>
 
-            <div class="step-indicator completed" id="step-ind-1">
-                1
-                <div class="step-label">Business Goals</div>
-            </div>
-            <div class="step-indicator active" id="step-ind-2">
-                2
-                <div class="step-label">Build Structure</div>
-            </div>
-            <div class="step-indicator" id="step-ind-3">
-                3
-                <div class="step-label">Action Plan</div>
-            </div>
-            <div class="step-indicator" id="step-ind-4">
-                4
-                <div class="step-label">Finalize Plan</div>
-            </div>
+        <div class="step-indicator completed" id="step-ind-1">
+            1
+            <div class="step-label">Business Goals</div>
+        </div>
+        <div class="step-indicator active" id="step-ind-2">
+            2
+            <div class="step-label">Build Structure</div>
+        </div>
+        <div class="step-indicator" id="step-ind-3">
+            3
+            <div class="step-label">Action Plan</div>
+        </div>
+        <div class="step-indicator" id="step-ind-4">
+            4
+            <div class="step-label">Finalize Plan</div>
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <div id="step-2" class="step-section active">
+<div class="container">
+    <div id="step-2" class="step-section active">
 
-            <!-- INTRO -->
-            <div class="intro-block">
-                <h1>Build Your Roadmap</h1>
-                <p>
-                    On this step we’ll choose your website package, map your core pages, and layer in any add-ons you might need.
-                    This gives us a clear snapshot of your project scope and investment.
-                </p>
-                <p style="font-size:0.85rem; color:var(--text-light); opacity:0.8; max-width:700px;">
-                    <em>
-                        Included in <strong>all</strong> website packages: strategy call (up to 2 hours),
-                        30 days after-launch support (fixing bugs, small content tweaks, “how do I…?” questions,
-                        and occasional mini trainings), plus mobile-optimized development, Google Analytics, and basic SEO.
-                        After that window, additional work follows your add-ons/hourly rates.
-                    </em>
-                </p>
+        <div class="intro-block">
+            <h1>Build Structure</h1>
+            <p>
+                Step 2 is where we define the scope: choose a package first, then we’ll layer in branding.
+            </p>
+
+            <div class="included-all">
+                <div class="included-title">Included in all website packages</div>
+                <ul>
+                    <li>1 revision</li>
+                    <li>Mobile-optimized development</li>
+                    <li>Google Analytics</li>
+                    <li>Basic SEO</li>
+                    <li>Basic copywriting</li>
+                    <li>Free subdomain / URL from Netlify</li>
+                </ul>
             </div>
-
-            <!-- 1. PACKAGES + BRAND KIT -->
-            <h2 class="section-title">1. Choose a Website Package</h2>
-
-            <div class="package-stack">
-                <!-- PACKAGE GRID (3 boxes) -->
-                <div class="package-grid">
-
-                    <!-- BASIC WEBSITE -->
-                    <div class="package-card basic-card"
-                         onclick="selectPackage('basic', 'Basic Website', 750, 2, 425, 150, this)">
-                        <div class="package-img-placeholder">
-                            <!-- Optional: add <img> if you want -->
-                        </div>
-                        <div class="package-content">
-                            <span class="package-title">Basic Website</span>
-                            <span class="package-price">$750</span>
-                            <div class="package-meta">Simple site · 1–2 pages · 5–7 days</div>
-                            <p class="package-desc">
-                                A clean, functional Google Site with essential business information, a basic contact form,
-                                and your client-provided logo and copy added for you.
-                                <br><br>
-                                <strong>Included:</strong> simple Google Site (1–2 pages), basic contact form,
-                                free Google Site URL/subdomain, basic SEO, and Google Analytics.
-                                <br>
-                                <strong>Best for:</strong> new businesses or freelancers needing a simple online presence —
-                                essentially an online business card with a contact option.
-                                <br><br>
-                                <strong>Suggested add-ons:</strong> extra page +$150, domain connection +$75,
-                                light copy polish +$75/page, or <em>Full Page From Scratch</em> (copy + SEO + build) at
-                                <strong>$250 per page</strong>.
-                                <br>
-                                <strong>Brand Kit bundle:</strong> $425 (15% off).
-                                <br>
-                                <strong>Revisions:</strong> 1 round of consolidated revisions
-                                (one list of text tweaks, image swaps, and minor layout changes).
-                                <br>
-                                <strong>After-launch support:</strong> 30 days, up to ~1 hour of small content tweaks total.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- POLISHED BRAND SITE -->
-                    <div class="package-card polished-card"
-                         onclick="selectPackage('polished', 'Polished Brand Site', 2250, 4, 400, 175, this)">
-                        <div class="package-img-placeholder">
-                            <!-- Optional: add <img> -->
-                        </div>
-                        <div class="package-content">
-                            <span class="package-title">Polished Brand Site</span>
-                            <span class="package-price">$2,250</span>
-                            <div class="package-meta">Custom design · up to 4 pages · 2–3 weeks</div>
-                            <p class="package-desc">
-                                A refined, branded Google Site with a polished, professional layout and light copy polish.
-                                <br><br>
-                                <strong>Included:</strong> custom-designed Google Site (up to 4 pages), branded layout,
-                                basic SEO, and free Google Site URL/subdomain.
-                                <br>
-                                <strong>Best for:</strong> businesses ready to look established and trustworthy online
-                                with an on-brand home base.
-                                <br><br>
-                                <strong>Suggested add-ons:</strong> additional page +$175, simple booking integration +$250,
-                                or <em>Full Page From Scratch</em> (copy + SEO + build) at
-                                <strong>$300 per page</strong>.
-                                <br>
-                                <strong>Brand Kit bundle:</strong> $400 (20% off).
-                                <br>
-                                <strong>Revisions:</strong> 2 rounds of consolidated revisions
-                                (each = one list of text tweaks, image swaps, and minor layout edits).
-                                <br>
-                                <strong>After-launch support:</strong> 30 days, up to ~2 hours of tweaks,
-                                plus 1 × 30-min follow-up call around week 3–4 to review analytics & questions.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- PROFESSIONAL WEBSITE -->
-                    <div class="package-card pro-card"
-                         onclick="selectPackage('professional', 'Professional Website', 4000, 6, 375, 200, this)">
-                        <div class="package-img-placeholder">
-                            <!-- Optional: add <img> -->
-                        </div>
-                        <div class="package-content">
-                            <span class="package-title">Professional Website</span>
-                            <span class="package-price">$4,000</span>
-                            <div class="package-meta">Fully custom-coded · 6 pages · 3–4 weeks</div>
-                            <p class="package-desc">
-                                A high-end, fully custom-built professional website with custom CSS, stronger SEO,
-                                and domain setup.
-                                <br><br>
-                                <strong>Included:</strong> fully custom-coded site (6 pages), custom CSS,
-                                basic SEO, and domain setup.
-                                <br>
-                                <strong>Best for:</strong> modern, growing businesses that need bookings, analytics,
-                                and a stronger SEO base.
-                                <br><br>
-                                <strong>Suggested add-ons:</strong> extra page +$200, blog setup +$250,
-                                or <em>Full Page From Scratch</em> (copy + SEO + build) at
-                                <strong>$350 per page</strong>.
-                                <br>
-                                <strong>Brand Kit bundle:</strong> $375 (25% off).
-                                <br>
-                                <strong>Revisions:</strong> up to 3 rounds total (design + content + functionality).
-                                <br>
-                                <strong>After-launch support:</strong> 45 days, up to ~3 hours of tweaks and refinements
-                                (content + functionality), plus 1 × 45-min follow-up call & basic analytics review.
-                            </p>
-                        </div>
-                    </div>
-
-                </div> <!-- /package-grid -->
-
-                <!-- BRAND KIT CARD UNDER PACKAGES -->
-                <div class="brand-kit-bar" id="brand-kit-bar" onclick="toggleBrandKit(this)">
-                    <div class="kit-details">
-                        <span class="kit-title">Brand Kit</span>
-                        <p class="kit-features">
-                            Logo Suite, Brand Colors &amp; Typography, Brand Persona &amp; Target Customer.
-                            <br>
-                            <strong>Logo Suite:</strong> primary, secondary, and icon logo in multiple formats.
-                            <br>
-                            <strong>Brand Colors &amp; Typography:</strong> 4–6 brand colors and 3–4 fonts
-                            in a simple PDF guide, plus business card design.
-                            <br>
-                            <strong>Brand Identity &amp; Target Customer:</strong> brand persona, ideal audience,
-                            mission, tone, and guidance on how to use it.
-                            <br><br>
-                            <strong>Standalone:</strong> $500 · approx. 1 week.
-                            When bundled with a website package, the Brand Kit will apply your special package rate
-                            (Basic: $425, Polished: $400, Professional: $375) in the invoice.
-                        </p>
-                    </div>
-                    <div class="kit-price-block">
-                        <span class="og-price">$500</span>
-                        <span class="discount-label">BUNDLE DISCOUNT APPLIED!</span>
-                        <div class="final-price">$500</div>
-                    </div>
-                </div>
-            </div> <!-- /package-stack -->
-
-            <!-- SECTION 2: PAGES + FUNCTIONALITY (two separate bubbles) -->
-            <hr class="divider">
-
-            <h2 class="section-title">2. Website Structure &amp; Add-ons</h2>
-
-            <!-- Wrapper for the two bubbles -->
-            <div id="addons-section" class="addons-section hidden">
-
-                <!-- BUBBLE 1: Your Sitemap (Pages) -->
-                <div class="sitemap-builder">
-                    <h3>Your Sitemap (Pages)</h3>
-                    <p>
-                        Let’s list the pages you need. Your selected package includes
-                        <strong id="included-pages-count">0</strong> pages.
-                        Additional pages are
-                        $<span id="extra-page-unit-cost">150</span>/ea for standard additional pages.
-                    </p>
-
-                    <div class="page-input-group">
-                        <input
-                            type="text"
-                            id="newPageName"
-                            placeholder="e.g. Home, Services, About, Contact"
-                            onkeypress="handleEnter(event)">
-                        <button class="btn btn-add" type="button" onclick="addPage()">+ Add Page</button>
-                    </div>
-
-                    <div id="page-list" class="page-list"></div>
-
-                    <div class="page-summary">
-                        <span>Total Pages: <span id="total-page-count">0</span></span>
-                        <span class="extra-cost-tag" id="extra-page-cost" style="display:none;">+ Extra Cost: $0</span>
-                    </div>
-                </div>
-
-                <!-- BUBBLE 2: Functionality & Services -->
-                <div class="sitemap-builder">
-                    <h3>Functionality &amp; Services</h3>
-                    <p style="font-size:0.9rem; opacity:0.85;">
-                        These are optional add-ons we’ll finalize together. You can pre-select anything that feels aligned.
-                    </p>
-
-                    <div class="addons-list">
-                        <div class="addon-pill"
-                             data-addon-id="seo"
-                             onclick="toggleAddon('seo', 'Advanced SEO', 500, this)">
-                            <span class="addon-name">Advanced SEO</span>
-                            <span class="addon-price">+ $500</span>
-                        </div>
-
-                        <div class="addon-pill"
-                             data-addon-id="copy"
-                             onclick="toggleAddon('copy', 'Website Copywriting', 800, this)">
-                            <span class="addon-name">Website Copywriting</span>
-                            <span class="addon-price">+ $800</span>
-                        </div>
-
-                        <div class="addon-pill"
-                             data-addon-id="logo"
-                             onclick="toggleAddon('logo', 'Logo Suite / Refresh', 300, this)">
-                            <span class="addon-name">Logo Suite / Refresh</span>
-                            <span class="addon-price">+ $300</span>
-                        </div>
-
-                        <div class="addon-pill"
-                             data-addon-id="booking"
-                             onclick="toggleAddon('booking', 'Booking System Integration', 200, this)">
-                            <span class="addon-name">Booking System Integration</span>
-                            <span class="addon-price">+ $200</span>
-                        </div>
-
-                        <div class="addon-pill"
-                             data-addon-id="hosting"
-                             onclick="toggleAddon('hosting', 'Hosting &amp; Domain Setup', 300, this)">
-                            <span class="addon-name">Hosting &amp; Domain Setup</span>
-                            <span class="addon-price">+ $300</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div> <!-- /addons-section -->
-
-            <!-- NAV BUTTONS -->
-            <div class="step-nav-buttons" style="margin-top:40px; display:flex; justify-content:space-between;">
-                <button class="btn btn-secondary" type="button" onclick="nextStep(1)">
-                    &larr; Back: Business Goals
-                </button>
-                <button class="btn btn-primary" type="button" onclick="nextStep(3)">
-                    Next: Action Plan &rarr;
-                </button>
-            </div>
-
         </div>
+
+        <!-- PACKAGES (COLLAPSIBLE) -->
+        <section class="collapsible" data-collapsible data-key="step2-packages">
+            <button class="collapsible-header" type="button" data-collapsible-header>
+                <div class="collapsible-header-left">
+                    <div class="collapsible-title">Website Packages</div>
+                    <div class="collapsible-subtitle">Your package choice sets the baseline for the rest of the build.</div>
+                </div>
+                <span class="collapsible-chevron" aria-hidden="true">▾</span>
+            </button>
+
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="package-grid">
+
+                        <div class="package-card"
+                             data-package-id="basic"
+                             onclick="selectPackage('basic','Basic Website',1500,2,425,150,this); handlePackageSelected();">
+                            <div class="package-top">
+                                <div class="package-name">Basic Website</div>
+                                <div class="package-price">$1,500</div>
+                            </div>
+                            <div class="package-meta">2 pages · 1 contact form</div>
+                            <p class="package-desc">
+                                Great for online business cards, photo galleries, personal announcements, or coming-soon pages.
+                            </p>
+                            <ul class="package-list">
+                                <li>2 pages</li>
+                                <li>1 contact form</li>
+                            </ul>
+                            <div class="package-duration">Duration: 1–2 weeks</div>
+                        </div>
+
+                        <div class="package-card"
+                             data-package-id="standard"
+                             onclick="selectPackage('standard','Standard Business Website',2500,5,400,175,this); handlePackageSelected();">
+                            <div class="package-top">
+                                <div class="package-name">Standard Business Website</div>
+                                <div class="package-price">$2,500</div>
+                            </div>
+                            <div class="package-meta">5 pages · 3 embeds · contact form</div>
+                            <p class="package-desc">
+                                Good for local businesses who need credibility and searchability (restaurants, contractors, boutiques).
+                            </p>
+                            <ul class="package-list">
+                                <li>5 pages</li>
+                                <li>Contact form</li>
+                                <li>3 embeds: Google Reviews, Google Maps, Instagram Feed</li>
+                                <li>Interactive design features + custom branding</li>
+                            </ul>
+                            <div class="package-duration">Duration: 3–4 weeks</div>
+                        </div>
+
+                        <div class="package-card"
+                             data-package-id="advanced"
+                             onclick="selectPackage('advanced','Advanced Business Website',4500,10,375,200,this); handlePackageSelected();">
+                            <div class="package-top">
+                                <div class="package-name">Advanced Business Website</div>
+                                <div class="package-price">$4,500</div>
+                            </div>
+                            <div class="package-meta">10 pages · integrations · 5 embeds</div>
+                            <p class="package-desc">
+                                Perfect for complex business needs like hotels, rentals, and e-commerce businesses.
+                            </p>
+                            <ul class="package-list">
+                                <li>10 pages</li>
+                                <li>System integrations (bookings, scheduling, e-commerce, etc.)</li>
+                                <li>Optional blog</li>
+                                <li>5 embeds (includes booking/scheduling system, chatbot, Google Reviews, Google Maps, Instagram Feed)</li>
+                                <li>Interactive design features, forms, and custom branding</li>
+                            </ul>
+                            <div class="package-duration">Duration: 5–6 weeks</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BRANDING (COLLAPSIBLE) -->
+        <section id="brandingSection" class="collapsible collapsed" data-collapsible data-key="step2-branding">
+            <button class="collapsible-header" type="button" data-collapsible-header>
+                <div class="collapsible-header-left">
+                    <div class="collapsible-title">Branding</div>
+                    <div class="collapsible-subtitle">Choose what you already have + what you want to add.</div>
+                </div>
+                <span class="collapsible-chevron" aria-hidden="true">▾</span>
+            </button>
+
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+
+                    <div class="notice" id="brandingLockedNotice">
+                        Select a website package above to unlock branding options.
+                    </div>
+
+                    <div id="brandingUnlocked" class="hidden">
+                        <div class="branding-toggle-row">
+                            <div class="branding-question">
+                                Do you have branding materials already provided?
+                            </div>
+
+                            <div class="segmented-control" role="radiogroup" aria-label="Branding provided">
+                                <input class="seg-input" type="radio" name="brandingProvided" id="brandingProvidedYes" value="yes">
+                                <label class="seg-label" for="brandingProvidedYes">Yes</label>
+
+                                <input class="seg-input" type="radio" name="brandingProvided" id="brandingProvidedNo" value="no">
+                                <label class="seg-label" for="brandingProvidedNo">No</label>
+                            </div>
+                        </div>
+
+                        <!-- YES PANEL -->
+                        <div id="brandingProvidedPanel" class="branding-panel hidden">
+                            <div class="form-grid">
+                                <div class="full-width">
+                                    <label>Upload Branding Materials (Optional)</label>
+                                    <input type="file" id="brandingUploads" multiple>
+                                    <div class="helper-text">Uploads aren’t saved automatically (local files). If you refresh, you may need to re-select them.</div>
+                                </div>
+
+                                <div class="full-width">
+                                    <label>What do you already have?</label>
+                                    <div class="mini-help">Examples: logos, brand colors, links, fonts, brand tone, brand guide PDF, photos, social links, etc.</div>
+                                    <textarea id="brandingProvidedNotes" class="save-me" rows="3" placeholder="List what you already have and any links or notes."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NO PANEL -->
+                        <div id="brandingNotProvidedPanel" class="branding-panel hidden">
+                            <div class="helper-text" style="margin:0;">
+                                No worries — you can add branding services below (bundle pricing applies when a package is selected).
+                            </div>
+                        </div>
+
+                        <!-- BRANDING OPTIONS -->
+                        <div class="branding-options">
+                            <div class="branding-options-title">Branding Services</div>
+
+                            <div class="brand-kit-card" id="brand-kit-bar" onclick="toggleBrandKit(this)">
+                                <div class="kit-details">
+                                    <div class="kit-title">Brand Kit</div>
+                                    <div class="kit-features">
+                                        Logo Suite, Brand Colors &amp; Typography, Brand Persona &amp; Target Customer.
+                                    </div>
+                                    <div class="kit-note">
+                                        <strong>Bundle price</strong> is shown automatically when a package is selected.
+                                    </div>
+                                </div>
+
+                                <div class="kit-price-block">
+                                    <span class="og-price">$500</span>
+                                    <span class="discount-label">BUNDLE RATE</span>
+                                    <div class="final-price">$500</div>
+                                </div>
+                            </div>
+
+                            <div class="addons-list" style="margin-top:14px;">
+                                <div class="addon-pill brand-addon"
+                                     data-addon-id="single_logo"
+                                     onclick="toggleAddon('single_logo','Single Logo',300,this)">
+                                    <span class="addon-name">Single Logo</span>
+                                    <span class="addon-price">+ $300</span>
+                                </div>
+
+                                <div class="addon-pill brand-addon"
+                                     id="customBrandingPill"
+                                     onclick="toggleCustomBranding(this)">
+                                    <span class="addon-name">Custom Branding Service</span>
+                                    <span class="addon-price">+ Custom</span>
+                                </div>
+                            </div>
+
+                            <div id="customBrandingPanel" class="custom-panel hidden">
+                                <div class="form-grid">
+                                    <div>
+                                        <label>Custom Service Name</label>
+                                        <input type="text" id="customBrandingName" class="save-me" placeholder="e.g. Brand Strategy Session">
+                                    </div>
+                                    <div>
+                                        <label>Custom Service Price ($)</label>
+                                        <input type="number" id="customBrandingPrice" class="save-me" placeholder="0" min="0" step="1">
+                                    </div>
+                                    <div class="full-width">
+                                        <div class="helper-text">This will appear in the quote widget as a line item once a price is entered.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="step-nav-buttons" style="margin-top:40px; display:flex; justify-content:space-between;">
+            <button class="btn btn-secondary" type="button" onclick="nextStep(1)">
+                &larr; Back: Business Goals
+            </button>
+            <button class="btn btn-primary" type="button" onclick="nextStep(3)">
+                Next: Action Plan &rarr;
+            </button>
+        </div>
+
     </div>
+</div>
 
-    <!-- SHARED JS -->
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
-    <!-- STEP 2 RESTORE LOGIC -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Load shared state (from script.js)
-        if (window.loadState) {
-            window.loadState();
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.loadState) window.loadState();
+
+    if (window.state && window.state.package && window.state.package.id) {
+        const selected = document.querySelector('.package-card[data-package-id="' + window.state.package.id + '"]');
+        if (selected) selected.classList.add('selected');
+        handlePackageSelected(true);
+    }
+
+    if (window.updateBrandKitDisplay) window.updateBrandKitDisplay();
+
+    if (window.state && Array.isArray(window.state.addons)) {
+        window.state.addons.forEach(function (addon) {
+            const pill = document.querySelector('.addon-pill[data-addon-id="' + addon.id + '"]');
+            if (pill) pill.classList.add('selected');
+        });
+
+        const custom = window.state.addons.find(a => a.id === 'custom_branding');
+        if (custom) {
+            const pill = document.getElementById('customBrandingPill');
+            if (pill) pill.classList.add('selected');
+            const panel = document.getElementById('customBrandingPanel');
+            if (panel) panel.classList.remove('hidden');
+            const nameEl = document.getElementById('customBrandingName');
+            const priceEl = document.getElementById('customBrandingPrice');
+            if (nameEl && custom.name) nameEl.value = custom.name.replace(/^Custom:\s*/, '');
+            if (priceEl && custom.price != null) priceEl.value = custom.price;
         }
+    }
 
-        // Restore selected package & UI
-        if (window.state && window.state.package) {
-            const pkg = window.state.package;
+    restoreBrandingProvided();
+    initLocalAutosave(['brandingProvidedNotes','customBrandingName','customBrandingPrice']);
 
-            const selectedCard = document.querySelector(
-                '.package-card[onclick*="' + pkg.id + '"]'
-            );
-            if (selectedCard) {
-                selectedCard.classList.add('selected');
-            }
+    if (window.calculateTotal) window.calculateTotal();
+});
 
-            const addonsWrapper = document.getElementById('addons-section');
-            if (addonsWrapper) {
-                addonsWrapper.classList.remove('hidden');
-            }
+function handlePackageSelected(isRestore) {
+    const notice = document.getElementById('brandingLockedNotice');
+    const unlocked = document.getElementById('brandingUnlocked');
+    if (notice) notice.classList.add('hidden');
+    if (unlocked) unlocked.classList.remove('hidden');
 
-            const incEl = document.getElementById('included-pages-count');
-            if (incEl) incEl.textContent = pkg.includedPages;
+    const branding = document.getElementById('brandingSection');
+    if (branding) {
+        branding.classList.remove('disabled');
+        branding.classList.remove('collapsed');
+        const header = branding.querySelector('[data-collapsible-header]');
+        if (header) header.setAttribute('aria-expanded', 'true');
+        try { localStorage.setItem('collapsible:step2-branding', 'open'); } catch (e) {}
+    }
 
-            const rateEl = document.getElementById('extra-page-unit-cost');
-            if (rateEl && pkg.extraPageCost != null) {
-                rateEl.textContent = pkg.extraPageCost;
-            }
+    if (window.updateBrandKitDisplay) window.updateBrandKitDisplay();
+    if (window.initCollapsibles && !isRestore) window.initCollapsibles();
+}
 
-            if (window.state.brandKit) {
-                const bar = document.getElementById('brand-kit-bar');
-                if (bar) bar.classList.add('selected');
-            }
+function restoreBrandingProvided() {
+    const saved = localStorage.getItem('brandingProvided');
+    if (!saved) return;
 
-            if (window.renderPageList) {
-                window.renderPageList();
-            }
-        }
+    const yes = document.getElementById('brandingProvidedYes');
+    const no = document.getElementById('brandingProvidedNo');
+    if (saved === 'yes' && yes) yes.checked = true;
+    if (saved === 'no' && no) no.checked = true;
 
-        // Restore pre-selected add-ons visually
-        if (window.state && Array.isArray(window.state.addons)) {
-            window.state.addons.forEach(function (addon) {
-                const pill = document.querySelector(
-                    '.addon-pill[data-addon-id="' + addon.id + '"]'
-                );
-                if (pill) {
-                    pill.classList.add('selected');
-                }
-            });
-        }
+    updateBrandingPanels(saved);
+}
 
-        // Restore goal from Step 1 in widget
-        const storedGoal = localStorage.getItem('mainGoal');
-        if (storedGoal) {
-            const goalDisplay = document.getElementById('fw-goal-display');
-            if (goalDisplay) {
-                goalDisplay.textContent = 'Goal: ' + storedGoal;
-                goalDisplay.style.display = 'block';
-            }
-        }
+function updateBrandingPanels(value) {
+    const yesPanel = document.getElementById('brandingProvidedPanel');
+    const noPanel = document.getElementById('brandingNotProvidedPanel');
 
-        // Make sure Brand Kit & totals are in sync
-        if (window.updateBrandKitDisplay) {
-            window.updateBrandKitDisplay();
-        }
-        if (window.calculateTotal) {
-            window.calculateTotal();
-        }
+    if (yesPanel) yesPanel.classList.toggle('hidden', value !== 'yes');
+    if (noPanel) noPanel.classList.toggle('hidden', value !== 'no');
+}
+
+document.addEventListener('change', function (e) {
+    if (e.target && e.target.name === 'brandingProvided') {
+        localStorage.setItem('brandingProvided', e.target.value);
+        updateBrandingPanels(e.target.value);
+    }
+});
+
+function toggleCustomBranding(pill) {
+    const panel = document.getElementById('customBrandingPanel');
+    const isSelected = pill.classList.toggle('selected');
+    if (panel) panel.classList.toggle('hidden', !isSelected);
+
+    if (!isSelected) {
+        if (window.removeAddonById) window.removeAddonById('custom_branding');
+        return;
+    }
+
+    updateCustomBrandingAddon();
+}
+
+function updateCustomBrandingAddon() {
+    const pill = document.getElementById('customBrandingPill');
+    if (!pill || !pill.classList.contains('selected')) return;
+
+    const nameEl = document.getElementById('customBrandingName');
+    const priceEl = document.getElementById('customBrandingPrice');
+
+    const nameRaw = nameEl ? nameEl.value.trim() : '';
+    const name = nameRaw ? `Custom: ${nameRaw}` : 'Custom Branding Service';
+    const price = priceEl ? Number(priceEl.value) : 0;
+
+    if (!price || price <= 0) {
+        if (window.removeAddonById) window.removeAddonById('custom_branding');
+        return;
+    }
+
+    if (window.upsertAddon) window.upsertAddon('custom_branding', name, price);
+}
+
+document.addEventListener('input', function (e) {
+    if (e.target && (e.target.id === 'customBrandingName' || e.target.id === 'customBrandingPrice')) {
+        updateCustomBrandingAddon();
+    }
+});
+
+function initLocalAutosave(ids) {
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const saved = localStorage.getItem(id);
+        if (saved !== null) el.value = saved;
+
+        const handler = () => localStorage.setItem(id, el.value);
+        el.addEventListener('input', handler);
+        el.addEventListener('change', handler);
     });
-    </script>
+}
+</script>
 
 </body>
 </html>
