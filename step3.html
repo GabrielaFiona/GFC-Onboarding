@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 3: Strategic Planning</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="step3">
+
+  <div class="progress-header">
+    <div class="progress-bar">
+      <div class="progress-line-bg"></div>
+      <div class="progress-line-fill" style="width:100%;"></div>
+      <div class="step-indicator completed">1</div>
+      <div class="step-indicator completed">2</div>
+      <div class="step-indicator active">3<div class="step-label">Planning</div></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Your Strategic Plan.</h1>
+    <p id="planSummary">Loading plan...</p>
+
+    <div id="planningContainer" style="margin-top:40px;"></div>
+
+    <div class="step-nav-buttons">
+      <button class="btn btn-secondary" onclick="nextStep(2)">&larr; Adjust Structure</button>
+      <button class="btn btn-primary" onclick="alert('Plan Saved! (This would go to checkout)')">Finalize Plan &rarr;</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
