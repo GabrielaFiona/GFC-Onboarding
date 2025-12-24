@@ -447,3 +447,303 @@ body.step1 .type-examples .ex {
     opacity: 0.75;
 }
 
+/* =========================================================
+   COLLAPSIBLE SECTION CARDS (Shared across all steps)
+   ========================================================= */
+.collapsible {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 0 28px;
+}
+
+.collapsible-header {
+    width: 100%;
+    border: 0;
+    background: rgba(255,255,255,0.01);
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+}
+
+.collapsible-header-left { text-align: left; }
+
+.collapsible-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--accent-blue);
+    line-height: 1.2;
+}
+
+.collapsible-subtitle {
+    margin-top: 6px;
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+.collapsible-chevron {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    color: var(--text-light);
+    opacity: 0.85;
+    flex: 0 0 auto;
+}
+
+.collapsible-header:hover .collapsible-chevron {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.collapsible-body {
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.28s ease;
+}
+
+.collapsible-inner {
+    overflow: hidden;
+    padding: 22px;
+}
+
+.collapsible.collapsed .collapsible-body {
+    grid-template-rows: 0fr;
+    border-top-color: transparent;
+}
+
+.collapsible.collapsed .collapsible-chevron { transform: rotate(-90deg); }
+.collapsible.collapsed .collapsible-inner { padding-top: 0; padding-bottom: 0; }
+
+/* =========================================================
+   STEP 2 STYLES (scoped)
+   ========================================================= */
+body.step2 .intro-block { margin-bottom: 40px; }
+
+body.step2 .included-all {
+    margin-top: 22px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    background: rgba(255,255,255,0.02);
+}
+
+body.step2 .included-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-bottom: 12px;
+}
+
+body.step2 .included-all ul { margin: 0 0 0 18px; padding: 0; }
+body.step2 .included-all li { margin-bottom: 8px; opacity: 0.88; }
+
+.empty-state {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* Packages */
+body.step2 .package-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+body.step2 .package-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.01);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+body.step2 .package-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 18px rgba(31, 127, 181, 0.25);
+    transform: translateY(-2px);
+}
+
+body.step2 .package-card.selected {
+    border-color: var(--accent-blue);
+    background: rgba(31, 127, 181, 0.10);
+    box-shadow: 0 0 22px rgba(31, 127, 181, 0.18);
+}
+
+body.step2 .package-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+body.step2 .package-name {
+    font-family: var(--font-heading);
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+body.step2 .package-price {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--accent-blue);
+}
+
+body.step2 .package-meta { font-size: 0.85rem; opacity: 0.75; margin-bottom: 12px; }
+body.step2 .package-desc { font-size: 0.95rem; opacity: 0.85; margin-bottom: 12px; }
+body.step2 .package-list { margin: 0 0 14px 18px; padding: 0; }
+body.step2 .package-list li { margin-bottom: 8px; opacity: 0.9; line-height: 1.4; }
+
+body.step2 .package-duration {
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    color: var(--text-light);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 12px;
+}
+
+/* Branding */
+body.step2 .notice {
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.02);
+    opacity: 0.9;
+}
+
+body.step2 .branding-toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+body.step2 .branding-question { font-size: 0.95rem; opacity: 0.9; }
+
+body.step2 .segmented-control {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+body.step2 .seg-input { position: absolute; opacity: 0; pointer-events: none; }
+
+body.step2 .seg-label {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    opacity: 0.8;
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    background: rgba(255,255,255,0.01);
+}
+
+body.step2 .seg-input:checked + .seg-label {
+    background: rgba(31, 127, 181, 0.18);
+    color: var(--accent-blue);
+    opacity: 1;
+}
+
+body.step2 .branding-panel {
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+}
+
+body.step2 .mini-help { font-size: 0.8rem; opacity: 0.7; margin: -4px 0 10px; }
+.helper-text { font-size: 0.85rem; opacity: 0.7; margin-top: 8px; }
+
+body.step2 .branding-options { margin-top: 22px; }
+body.step2 .branding-options-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--accent-blue);
+    margin-bottom: 12px;
+}
+
+body.step2 .brand-kit-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    cursor: pointer;
+    background: rgba(255,255,255,0.01);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+body.step2 .brand-kit-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 18px rgba(31, 127, 181, 0.22);
+    transform: translateY(-1px);
+}
+
+body.step2 .brand-kit-card.selected {
+    border-color: var(--accent-blue);
+    background: rgba(31, 127, 181, 0.10);
+    box-shadow: 0 0 18px rgba(31, 127, 181, 0.18);
+}
+
+body.step2 .kit-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+    color: var(--text-light);
+}
+
+body.step2 .kit-features { font-size: 0.95rem; opacity: 0.85; margin-bottom: 8px; }
+body.step2 .kit-note { font-size: 0.85rem; opacity: 0.75; }
+
+body.step2 .kit-price-block { text-align: right; min-width: 120px; padding-left: 10px; }
+body.step2 .og-price { display: none; text-decoration: line-through; opacity: 0.65; font-size: 0.85rem; }
+body.step2 .discount-label { display: none; font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-blue); margin-top: 4px; }
+
+body.step2 .final-price {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    margin-top: 8px;
+    color: var(--bg-dark);
+    background: var(--text-light);
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+body.step2 .custom-panel {
+    margin-top: 16px;
+    padding: 18px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+}
+
+@media (max-width: 980px) {
+    body.step2 .package-grid { grid-template-columns: 1fr; }
+}
