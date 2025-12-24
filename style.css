@@ -101,13 +101,12 @@ p { margin-bottom: 24px; font-weight: 300; font-size: 1.05rem; color: var(--text
   border-color: var(--accent-blue);
   color: #fff;
 }
-/* UPDATE 1: Step labels always visible, just dimmed */
 .step-label {
   position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
   font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
   white-space: nowrap; 
   color: var(--text-muted); 
-  opacity: 0.5; /* Visible but dimmed */
+  opacity: 0.5;
   transition: opacity 0.3s, color 0.3s;
 }
 .step-indicator.active .step-label { opacity: 1; color: var(--accent-blue); font-weight: 700; }
@@ -210,7 +209,6 @@ select option { background: #0f1322; color: var(--text-main); }
 .collapsible-header:hover .collapsible-chevron { border-color: var(--accent-blue); color: var(--accent-blue); }
 .collapsible.collapsed .collapsible-chevron { transform: rotate(-90deg); }
 
-/* UPDATE 2: Fix Cut-off logic. */
 .collapsible-body {
   border-top: 1px solid var(--border-light);
   display: grid; 
@@ -219,17 +217,14 @@ select option { background: #0f1322; color: var(--text-main); }
 }
 .collapsible.collapsed .collapsible-body { 
   grid-template-rows: 0fr; 
-  border-top-color: transparent; /* Hides border when closed */
+  border-top-color: transparent;
 }
 .collapsible-inner { 
   overflow: hidden; 
   padding: 30px; 
-  transition: padding 0.4s ease; /* Smooth padding remove */
+  transition: padding 0.4s ease;
 }
-.collapsible.collapsed .collapsible-inner { 
-  padding-top: 0; 
-  padding-bottom: 0; 
-}
+.collapsible.collapsed .collapsible-inner { padding-top: 0; padding-bottom: 0; }
 
 /* --- Step Specifics --- */
 .welcome-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; margin-bottom: 60px; align-items: start; }
@@ -314,7 +309,6 @@ select option { background: #0f1322; color: var(--text-main); }
 .addon-pill:hover { border-color: var(--accent-blue); background: var(--surface-hover); }
 .addon-pill.selected { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
 
-/* UPDATE 3: File Upload Download Box */
 .file-staging-area { margin-top: 15px; border: 1px dashed var(--border-light); border-radius: 8px; padding: 15px; background: rgba(0,0,0,0.2); }
 .file-list-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
 .file-list-item:last-child { border-bottom: none; }
@@ -325,128 +319,79 @@ select option { background: #0f1322; color: var(--text-main); }
 }
 .btn-download-mini:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
+/* --- PAGE BUILDER (Step 2) --- */
+.page-builder-search {
+  display: flex; gap: 10px; margin-bottom: 20px;
+}
+.industry-chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0 25px 0; }
+.suggestion-chip {
+  padding: 8px 16px; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.8rem;
+  background: var(--surface-base); color: var(--text-muted); cursor: pointer;
+  transition: all 0.3s;
+}
+.suggestion-chip:hover { border-color: var(--accent-blue); color: var(--text-main); }
+.suggestion-chip.added { background: rgba(44, 166, 224, 0.2); border-color: var(--accent-blue); color: var(--accent-blue); pointer-events: none; }
+
+.active-pages-list {
+  background: var(--surface-hover); border-radius: 12px; padding: 20px;
+  min-height: 100px; border: 1px dashed var(--border-light);
+}
+.page-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface-active); border: 1px solid var(--accent-blue);
+  color: var(--text-main); padding: 8px 15px; border-radius: 30px; margin: 5px;
+  font-size: 0.9rem; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.page-tag-remove { cursor: pointer; opacity: 0.6; font-size: 1.1rem; line-height: 1; }
+.page-tag-remove:hover { opacity: 1; }
+.page-limit-warning {
+  color: #ff6b6b; font-size: 0.8rem; margin-top: 10px; display: none;
+}
+.page-limit-warning.visible { display: block; }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* --- CANVAS & MOCKUP TOOLS (Step 3) --- */
+.planning-grid { display: grid; gap: 40px; }
+.plan-card {
+  background: var(--surface-base); border: 1px solid var(--border-light);
+  border-radius: 16px; overflow: hidden;
+}
+.plan-card-header {
+  padding: 15px 25px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-light);
+  font-family: var(--font-heading); font-size: 1.3rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.plan-card-body { padding: 25px; }
+
+/* Mockup Toolbar */
+.mockup-toolbar {
+  display: flex; gap: 10px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-light);
+}
+.tool-btn {
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  background: var(--surface-base); border: 1px solid var(--border-light); border-radius: 6px;
+  color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+}
+.tool-btn:hover, .tool-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+.canvas-container {
+  width: 100%; height: 400px; background: #0f1322; border: 1px dashed var(--border-light);
+  border-radius: 8px; position: relative; overflow: hidden; cursor: crosshair;
+}
+
+/* Integrations Panel (Advanced) */
+.integration-row { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+.integration-list { background: var(--surface-hover); border-radius: 8px; padding: 20px; }
+.integration-item {
+  padding: 10px; margin-bottom: 10px; background: var(--surface-base); border: 1px solid var(--border-light);
+  border-radius: 6px; font-size: 0.9rem; cursor: grab;
+}
+.integration-item:active { cursor: grabbing; }
+
 .hidden { display: none !important; }
 
 @media (max-width: 900px) {
-  .package-grid, .aftercare-grid, .welcome-grid, .form-grid { grid-template-columns: 1fr; }
+  .package-grid, .aftercare-grid, .welcome-grid, .form-grid, .integration-row { grid-template-columns: 1fr; }
   .full-width { grid-column: auto; }
   h1 { font-size: 2.5rem; }
   .container { margin: 30px auto; }
 }
-/* --- Keep existing Root/Body/Typography from previous version --- */
-:root {
-  --bg-dark: #050508;
-  --bg-gradient: radial-gradient(circle at 50% 0%, #0f1322 0%, #050508 80%);
-  --accent-blue: #2CA6E0;
-  --accent-glow: rgba(44, 166, 224, 0.4);
-  --text-main: #FFFFFF;
-  --text-muted: #A0A5B0;
-  --surface-base: rgba(255, 255, 255, 0.03);
-  --surface-hover: rgba(255, 255, 255, 0.06);
-  --surface-active: rgba(44, 166, 224, 0.1);
-  --border-light: rgba(255, 255, 255, 0.1);
-  --font-heading: 'Cormorant Garamond', serif;
-  --font-body: 'Montserrat', sans-serif;
-  --success-green: #2ecc71;
-  --warning-orange: #f39c12;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg-dark); background-image: var(--bg-gradient); background-attachment: fixed;
-  color: var(--text-main); font-family: var(--font-body); padding-bottom: 140px; line-height: 1.7;
-}
-
-/* --- Typography & Layout --- */
-h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--text-main); font-weight: 300; }
-h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 15px; }
-h2 { font-size: 2.2rem; margin-bottom: 20px; color: var(--accent-blue); }
-h4 { font-size: 1.25rem; font-weight: 600; margin-bottom: 5px; }
-p { margin-bottom: 24px; font-weight: 300; font-size: 1.05rem; color: var(--text-muted); }
-.container { max-width: 960px; margin: 60px auto; padding: 0 25px; position: relative; z-index: 1; }
-
-/* --- Progress Header --- */
-.progress-header { position: sticky; top: 0; background: rgba(5,5,8,0.85); backdrop-filter: blur(12px); z-index: 100; padding: 30px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: center; }
-.progress-bar { display: flex; width: 90%; max-width: 800px; position: relative; justify-content: space-between; }
-.progress-line-bg { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--border-light); z-index: 1; }
-.progress-line-fill { position: absolute; top: 50%; left: 0; width: 0%; height: 2px; background: var(--accent-blue); box-shadow: 0 0 15px var(--accent-glow); z-index: 2; transition: width 0.6s ease; }
-.step-indicator { position: relative; z-index: 3; background: var(--bg-dark); border: 1px solid var(--border-light); color: var(--text-muted); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; transition: all 0.4s ease; }
-.step-indicator.active { border-color: var(--accent-blue); color: var(--accent-blue); transform: scale(1.1); box-shadow: 0 0 15px var(--surface-active); }
-.step-indicator.completed { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
-.step-label { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); opacity: 0.5; white-space: nowrap; }
-.step-indicator.active .step-label { opacity: 1; color: var(--accent-blue); font-weight: 700; }
-
-/* --- Forms & Buttons --- */
-.form-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-.full-width { grid-column: span 2; }
-label { display: block; margin-bottom: 12px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; color: var(--accent-blue); }
-input, select, textarea { width: 100%; padding: 16px 20px; background: var(--surface-base); border: 1px solid var(--border-light); border-radius: 8px; font-family: var(--font-body); font-size: 1rem; color: var(--text-main); transition: all 0.3s ease; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-blue); background: var(--surface-hover); }
-.btn { padding: 18px 40px; border: none; border-radius: 6px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
-.btn-primary { background: var(--accent-blue); color:#fff; }
-.btn-primary:hover { background: #3cb4ee; transform: translateY(-2px); }
-.btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border-light); }
-.btn-secondary:hover { border-color: var(--accent-blue); color: var(--text-main); }
-.step-nav-buttons { display:flex; gap: 20px; justify-content: space-between; margin-top: 60px; }
-
-/* --- Collapsibles --- */
-.collapsible { background: var(--surface-base); border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden; margin-bottom: 30px; transition: border-color 0.3s ease; }
-.collapsible-header { width: 100%; padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: transparent; border: none; text-align: left; }
-.collapsible-title { font-family: var(--font-heading); font-size: 1.6rem; color: var(--text-main); margin-bottom: 5px; }
-.collapsible-subtitle { font-size: 0.95rem; color: var(--text-muted); }
-.collapsible-chevron { transition: transform 0.3s ease; color: var(--text-muted); font-size: 1.2rem; }
-.collapsible.collapsed .collapsible-chevron { transform: rotate(-90deg); }
-.collapsible-body { border-top: 1px solid var(--border-light); display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.4s ease; }
-.collapsible.collapsed .collapsible-body { grid-template-rows: 0fr; border-top: none; }
-.collapsible-inner { overflow: hidden; padding: 30px; }
-.collapsible.collapsed .collapsible-inner { padding: 0 30px; }
-
-/* --- Step 2: Chips & Page Builder --- */
-.suggestion-box { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-.chip { padding: 8px 16px; border-radius: 50px; border: 1px solid var(--border-light); background: rgba(255,255,255,0.05); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: var(--text-muted); display: inline-flex; align-items: center; gap: 8px; }
-.chip:hover { border-color: var(--accent-blue); background: var(--surface-hover); color: var(--text-main); transform: translateY(-2px); }
-.chip i { font-style: normal; font-weight: bold; color: var(--accent-blue); }
-
-.added-pages-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; min-height: 60px; border: 1px dashed var(--border-light); }
-.page-pill { padding: 8px 18px; background: var(--accent-blue); color: #fff; border-radius: 50px; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.page-pill .remove-page { cursor: pointer; opacity: 0.7; font-weight: bold; font-size: 1.1rem; }
-.page-pill .remove-page:hover { opacity: 1; }
-@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-.cost-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-left: 10px; }
-.cost-badge.included { background: rgba(46, 204, 113, 0.2); color: var(--success-green); border: 1px solid var(--success-green); }
-.cost-badge.extra { background: rgba(243, 156, 18, 0.2); color: var(--warning-orange); border: 1px solid var(--warning-orange); }
-
-/* --- Step 3: Planning UI --- */
-.plan-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; border-bottom: 1px solid var(--border-light); }
-.plan-tab { padding: 10px 20px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; font-weight: 600; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.3s; }
-.plan-tab:hover { color: var(--text-main); }
-.plan-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
-
-.plan-module { display: none; animation: fadeIn 0.4s ease; }
-.plan-module.active { display: block; }
-
-/* Visual Section Builder (Standard) */
-.section-builder-container { display: flex; gap: 20px; align-items: flex-start; }
-.section-palette { width: 250px; background: var(--surface-base); padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); }
-.draggable-section { padding: 10px; background: var(--surface-hover); margin-bottom: 8px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; border: 1px solid transparent; transition: all 0.2s; }
-.draggable-section:hover { border-color: var(--accent-blue); transform: translateX(5px); }
-.page-canvas { flex: 1; min-height: 400px; background: rgba(0,0,0,0.2); border: 2px dashed var(--border-light); border-radius: 8px; padding: 20px; }
-.canvas-item { background: var(--surface-base); padding: 15px; border-radius: 6px; border: 1px solid var(--border-light); margin-bottom: 10px; position: relative; }
-
-/* Advanced Flowchart (Systems Map) */
-.flowchart-canvas { position: relative; width: 100%; height: 500px; background: radial-gradient(#1f2430 1px, transparent 1px); background-size: 20px 20px; border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; }
-.flow-node { position: absolute; min-width: 180px; background: #1a1f2e; border: 1px solid var(--accent-blue); padding: 12px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: #fff; cursor: grab; }
-.flow-node-header { font-size: 0.85rem; font-weight: 700; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; }
-.flow-connector { font-size: 0.75rem; color: var(--text-muted); margin-top: 5px; }
-
-/* Widget */
-#floating-widget { position: fixed; bottom: 30px; right: 30px; width: 320px; background: rgba(15, 19, 34, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--border-light); border-radius: 12px; z-index: 1000; transition: transform 0.3s; }
-#floating-widget.collapsed { transform: translateY(calc(100% - 60px)); }
-.fw-header { padding: 18px 25px; cursor: pointer; border-bottom: 1px solid var(--border-light); font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; }
-.fw-content { padding: 25px; }
-.fw-total { margin-top: 20px; font-size: 1.5rem; color: var(--text-main); font-family: var(--font-heading); display: flex; justify-content: space-between; border-top: 1px solid var(--border-light); padding-top: 15px; }
-.fw-item { display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:8px; color:var(--text-muted); }
-
-.hidden { display: none !important; }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
