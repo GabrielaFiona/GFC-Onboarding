@@ -42,35 +42,28 @@ function nextStep(stepNumber) {
 
 // --- PACKAGE SELECTION ---
 function selectPackage(id, name, price, includedPages, brandKitBundlePrice, extraPageCost, element) {
-    // 1. Visual selection
     document.querySelectorAll('.package-card').forEach(el => el.classList.remove('selected'));
     element.classList.add('selected');
 
-    // 2. Update state with the chosen package
     state.package = {
         id,
         name,
         price,
         includedPages,
         brandKitBundlePrice,
-        extraPageCost // package-specific extra page cost
+        extraPageCost
     };
 
-    // 3. Update UI text (included pages + extra-page rate), if elements exist
     const includedPagesEl = document.getElementById('included-pages-count');
     if (includedPagesEl) includedPagesEl.innerText = includedPages;
 
     const extraPageCostEl = document.getElementById('extra-page-unit-cost');
     if (extraPageCostEl) extraPageCostEl.innerText = extraPageCost;
 
-    // 4. Reveal the addons / sitemap section (but do NOT scroll)
     const addonsSection = document.getElementById('addons-section');
     if (addonsSection) addonsSection.classList.remove('hidden');
 
-    // 5. Recalculate totals, but leave the widget collapsed unless you open it
     calculateTotal();
-
-    // 6. Optionally persist immediately
     saveState();
     updateBrandKitDisplay();
 }
@@ -96,8 +89,12 @@ function updateBrandKitDisplay() {
 
     if (!finalPriceEl) return;
 
-    if (state.brandKit && state.package && state.package.brandKitBundlePrice) {
-        const bundled = state.package.brandKitBundlePrice;
+    const hasBundle = !!(state.package && state.package.brandKitBundlePrice);
+    const bundledPrice = hasBundle ? Number(state.package.brandKitBundlePrice) : BASE_BRAND_KIT_PRICE;
+
+    bar.classList.toggle('selected', !!state.brandKit);
+
+    if (hasBundle && bundledPrice && bundledPrice !== BASE_BRAND_KIT_PRICE) {
         if (ogPriceEl) {
             ogPriceEl.textContent = `$${BASE_BRAND_KIT_PRICE.toLocaleString()}`;
             ogPriceEl.style.display = 'inline';
@@ -105,7 +102,7 @@ function updateBrandKitDisplay() {
         if (discountLabelEl) {
             discountLabelEl.style.display = 'block';
         }
-        finalPriceEl.textContent = `$${bundled.toLocaleString()}`;
+        finalPriceEl.textContent = `$${bundledPrice.toLocaleString()}`;
     } else {
         if (ogPriceEl) ogPriceEl.style.display = 'none';
         if (discountLabelEl) discountLabelEl.style.display = 'none';
@@ -185,13 +182,11 @@ function calculateTotal() {
     let total = 0;
     let extraCost = 0;
 
-    // Package
     if (state.package) {
         html += `<div class="fw-item"><span>${state.package.name}</span><span>$${state.package.price.toLocaleString()}</span></div>`;
         total += state.package.price;
     }
 
-    // Brand Kit
     if (state.brandKit) {
         let kitPrice = BASE_BRAND_KIT_PRICE;
         let label = 'Brand Kit';
@@ -203,7 +198,6 @@ function calculateTotal() {
         total += kitPrice;
     }
 
-    // Extra pages
     if (state.package) {
         const included = Number(state.package.includedPages || 0);
         const pageRate = Number(state.package.extraPageCost || 0);
@@ -226,7 +220,6 @@ function calculateTotal() {
         }
     }
 
-    // Addons
     state.addons.forEach(addon => {
         html += `<div class="fw-item"><span>+ ${addon.name}</span><span>$${addon.price.toLocaleString()}</span></div>`;
         total += addon.price;
@@ -238,7 +231,6 @@ function calculateTotal() {
 
     fwItems.innerHTML = html;
 
-    // Totals
     const headerTotalEl = document.getElementById('fw-header-total');
     if (headerTotalEl) headerTotalEl.textContent = `$${total.toLocaleString()}`;
 
@@ -254,6 +246,64 @@ function toggleWidget() {
     const widget = document.getElementById('floating-widget');
     if (!widget) return;
     widget.classList.toggle('collapsed');
+}
+
+/* --- COLLAPSIBLE SECTIONS (shared) --- */
+function initCollapsibles() {
+    const sections = document.querySelectorAll('[data-collapsible]');
+    sections.forEach(section => {
+        const header = section.querySelector('[data-collapsible-header]');
+        if (!header) return;
+
+        const key = section.getAttribute('data-key') || section.id;
+        const storageKey = key ? `collapsible:${key}` : null;
+
+        if (storageKey) {
+            const saved = localStorage.getItem(storageKey);
+            if (saved === 'collapsed') {
+                section.classList.add('collapsed');
+                header.setAttribute('aria-expanded', 'false');
+            } else if (saved === 'open') {
+                section.classList.remove('collapsed');
+                header.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        if (!header.hasAttribute('aria-expanded')) {
+            header.setAttribute('aria-expanded', section.classList.contains('collapsed') ? 'false' : 'true');
+        }
+
+        header.addEventListener('click', () => {
+            const collapsed = section.classList.toggle('collapsed');
+            header.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            if (storageKey) localStorage.setItem(storageKey, collapsed ? 'collapsed' : 'open');
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', initCollapsibles);
+
+/* --- ADDON HELPERS (shared) --- */
+function upsertAddon(id, name, price) {
+    const idx = state.addons.findIndex(a => a.id === id);
+    const cleanPrice = Number(price) || 0;
+
+    if (idx === -1) state.addons.push({ id, name, price: cleanPrice });
+    else {
+        state.addons[idx].name = name;
+        state.addons[idx].price = cleanPrice;
+    }
+
+    calculateTotal();
+    saveState();
+}
+
+function removeAddonById(id) {
+    const idx = state.addons.findIndex(a => a.id === id);
+    if (idx !== -1) {
+        state.addons.splice(idx, 1);
+        calculateTotal();
+        saveState();
+    }
 }
 
 // Expose globals
@@ -272,3 +322,6 @@ window.calculateTotal = calculateTotal;
 window.updateBrandKitDisplay = updateBrandKitDisplay;
 window.renderPageList = renderPageList;
 window.toggleWidget = toggleWidget;
+window.upsertAddon = upsertAddon;
+window.removeAddonById = removeAddonById;
+window.initCollapsibles = initCollapsibles;
