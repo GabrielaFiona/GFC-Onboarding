@@ -1,99 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Step 1: Goals & Industry</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Onboarding - Gabriela Fiona</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="step1">
+
+  <div id="floating-widget" class="collapsed">
+    <div class="fw-header" onclick="toggleWidget()">
+      <span>Estimated Investment</span>
+      <span id="fw-header-total">$0</span>
+    </div>
+    <div class="fw-content">
+      <div id="fw-items">
+        <p style="font-size:0.8rem; opacity:0.6; font-style:italic;">Items added will appear here...</p>
+      </div>
+      <div class="fw-total">
+        <span>Total</span>
+        <span id="fw-full-total">$0</span>
+      </div>
+      <div class="fw-deposit">
+        50% Deposit: <span id="fw-deposit">$0</span>
+      </div>
+    </div>
+  </div>
 
   <div class="progress-header">
     <div class="progress-bar">
       <div class="progress-line-bg"></div>
-      <div class="progress-line-fill" style="width:0%;"></div>
-      <div class="step-indicator active">1<div class="step-label">Goals</div></div>
-      <div class="step-indicator">2<div class="step-label">Structure</div></div>
-      <div class="step-indicator">3<div class="step-label">Planning</div></div>
+      <div class="progress-line-fill" id="progress-fill" style="width:0%;"></div>
+
+      <div class="step-indicator active" id="step-ind-1">
+        1 <div class="step-label">Goals</div>
+      </div>
+      <div class="step-indicator" id="step-ind-2">
+        2 <div class="step-label">Structure</div>
+      </div>
+      <div class="step-indicator" id="step-ind-3">
+        3 <div class="step-label">Plan</div>
+      </div>
+      <div class="step-indicator" id="step-ind-4">
+        4 <div class="step-label">Finalize</div>
+      </div>
     </div>
   </div>
 
   <div class="container">
-    <h1>Let's start with your vision.</h1>
-    <p>We use your industry to suggest the perfect website structure in the next step.</p>
+    <div id="step-1" class="step-section active">
 
-    <div class="collapsible">
-      <button class="collapsible-header">
-        <div class="collapsible-title">1. Industry & Foundation</div>
-        <span class="collapsible-chevron">▾</span>
-      </button>
-      <div class="collapsible-body">
-        <div class="collapsible-inner">
-          <div class="form-grid">
-            <div class="full-width">
-              <label>What is your industry?</label>
-              <input type="text" id="industryInput" class="save-me" placeholder="e.g. Restaurant, Real Estate, Yoga, Contractor..." list="industryList">
-              <datalist id="industryList">
-                <option value="Restaurant / Cafe">
-                <option value="Contractor / Trades">
-                <option value="Real Estate">
-                <option value="E-commerce Brand">
-                <option value="Health / Wellness">
-              </datalist>
+      <div class="welcome-grid">
+        <div class="welcome-text">
+          <h1>Let's build your roadmap.</h1>
+          <p>My goal for this call is to get clear on your vision and create a plan that feels simple, strategic, and completely "you." No jargon, no confusion—just a clear path forward.</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>1. Context</h4>
+            <p>Where are you now, and where do you want to be?</p>
+          </div>
+          <div class="timeline-item">
+            <h4>2. Strategy</h4>
+            <p>Selecting the exact features you need.</p>
+          </div>
+          <div class="timeline-item">
+            <h4>3. Action</h4>
+            <p>Reviewing investment and timeline.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="intake-section">
+        
+        <section class="collapsible" data-collapsible data-key="step1-client-essentials">
+          <button class="collapsible-header" type="button" data-collapsible-header>
+            <div>
+              <div class="collapsible-title">Client Essentials</div>
+              <div class="collapsible-subtitle">Basic contact + business info.</div>
             </div>
+            <div class="collapsible-chevron">▾</div>
+          </button>
 
-            <div class="full-width" style="background: rgba(44, 166, 224, 0.05); padding: 15px; border-radius: 8px; border: 1px dashed var(--accent-blue);">
-              <label style="margin-bottom:5px;">Preview: Common pages for this industry</label>
-              <p style="font-size:0.8rem; margin-bottom:10px;">We'll customize these in Step 2.</p>
-              <div class="suggestion-box" id="industryPreviewChips">
+          <div class="collapsible-body">
+            <div class="collapsible-inner">
+              <div class="form-grid">
+                <div>
+                  <label>Client Name</label>
+                  <input type="text" id="clientName" class="save-me" placeholder="e.g. Jane Doe" />
                 </div>
-            </div>
-
-            <div>
-              <label>Website Need</label>
-              <select id="siteNeed">
-                <option>New Website</option>
-                <option>Redesign</option>
-                <option>Migration</option>
-              </select>
-            </div>
-            <div>
-              <label>Main Goal</label>
-              <select id="mainGoal">
-                <option>Get Leads/Calls</option>
-                <option>Sell Products</option>
-                <option>Display Portfolio</option>
-                <option>Information Only</option>
-              </select>
+                <div>
+                  <label>Business / Brand Name</label>
+                  <input type="text" id="businessName" class="save-me" placeholder="e.g. Studio LLC" />
+                </div>
+                <div>
+                  <label>Email Address</label>
+                  <input type="email" id="clientEmail" class="save-me" placeholder="jane@example.com" />
+                </div>
+                <div>
+                  <label>Phone Number</label>
+                  <input type="tel" id="clientPhone" class="save-me" placeholder="(555) 123-4567" />
+                </div>
+                <div class="full-width">
+                  <label>Current Website URL (If applicable)</label>
+                  <input type="text" id="clientUrl" class="save-me" placeholder="www.yoursite.com" />
+                </div>
+                <div class="full-width">
+                  <label>Industry</label>
+                  <input type="text" id="clientIndustry" class="save-me" placeholder="e.g. Interior Design, Tech, Retail" />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
 
-    <div class="collapsible collapsed">
-      <button class="collapsible-header">
-        <div class="collapsible-title">2. Client Essentials</div>
-        <span class="collapsible-chevron">▾</span>
-      </button>
-      <div class="collapsible-body">
-        <div class="collapsible-inner">
-          <div class="form-grid">
-            <div><label>Name</label><input type="text" id="clientName"></div>
-            <div><label>Business Name</label><input type="text" id="businessName"></div>
+        <section class="collapsible" data-collapsible data-key="step1-website-type">
+          <button class="collapsible-header" type="button" data-collapsible-header>
+            <div>
+              <div class="collapsible-title">Website Type</div>
+              <div class="collapsible-subtitle">What kind of site are we building?</div>
+            </div>
+            <div class="collapsible-chevron">▾</div>
+          </button>
+
+          <div class="collapsible-body">
+            <div class="collapsible-inner">
+              <div class="form-grid">
+                <div class="full-width">
+                  <label>Category</label>
+                  <select id="websiteType" class="save-me">
+                    <option value="" disabled selected>Select category...</option>
+                    <option value="Business & Marketing">Business &amp; Marketing</option>
+                    <option value="E-Commerce & Retail">E-Commerce &amp; Retail</option>
+                    <option value="Content, Media & Education">Content, Media &amp; Education</option>
+                    <option value="Personal & Niche">Personal &amp; Niche</option>
+                  </select>
+
+                  <details id="websiteTypeExamplesWrap" style="display:none; margin-top:15px;">
+                    <summary style="cursor:pointer; color:var(--accent-blue); font-size:0.9rem;">View examples</summary>
+                    <div id="websiteTypeExamples" class="type-examples"></div>
+                  </details>
+                </div>
+
+                <div class="full-width">
+                  <label>Notes / Specifics</label>
+                  <textarea id="websiteTypeNotes" rows="4" class="save-me" placeholder="Any context, links, or specifics you want me to know?"></textarea>
+                </div>
+              </div>
+            </div>
           </div>
+        </section>
+
+        <div class="step-nav-buttons">
+          <button class="btn btn-secondary" type="button" onclick="resetForm()">Reset</button>
+          <button class="btn btn-primary" type="button" onclick="nextStep(2)">Next: Structure &rarr;</button>
         </div>
       </div>
-    </div>
-
-    <div class="step-nav-buttons" style="justify-content:flex-end;">
-      <button class="btn btn-primary" onclick="nextStep(2)">Next: Structure &rarr;</button>
     </div>
   </div>
 
   <script src="script.js"></script>
+  <script>
+    /* Kept exactly the same to preserve functionality */
+    document.addEventListener('DOMContentLoaded', function () {
+      const inputs = document.querySelectorAll('.save-me');
+      inputs.forEach(input => {
+        const saved = localStorage.getItem(input.id);
+        if (saved !== null) input.value = saved;
+        const handler = function () {
+          localStorage.setItem(this.id, this.value);
+          if (this.id === 'websiteType') updateWebsiteTypeExamples();
+        };
+        input.addEventListener('input', handler);
+        input.addEventListener('change', handler);
+      });
+      updateWebsiteTypeExamples();
+      if (window.loadState) window.loadState();
+      if (window.calculateTotal) window.calculateTotal();
+    });
+
+    const WEBSITE_TYPE_LIBRARY = {
+      "Business & Marketing": {
+        title: "I. Business & Marketing",
+        intro: "Sites designed to build a brand or generate leads.",
+        items: [
+          { name: "Brochure/Informational", desc: "Standard 5–10 page site (Home, About, Services).", ex: "Law firms, dentists." },
+          { name: "Landing Page", desc: "Single page for a specific campaign.", ex: "Webinar signup." },
+          { name: "Portfolio", desc: "Visual-heavy site for creatives.", ex: "Photographers." }
+        ]
+      },
+      "E-Commerce & Retail": {
+        title: "II. E-Commerce & Retail",
+        intro: "Sites dedicated to selling products.",
+        items: [
+          { name: "Online Store", desc: "Direct-to-consumer storefront.", ex: "Nike, Boutiques." },
+          { name: "Marketplace", desc: "Multiple vendors.", ex: "Etsy." }
+        ]
+      },
+      "Content, Media & Education": {
+        title: "III. Content & Media",
+        intro: "Sites driven by consumption and learning.",
+        items: [
+          { name: "Blog", desc: "Journal-style content.", ex: "Travel blogs." },
+          { name: "LMS", desc: "Courses and student tracking.", ex: "Udemy." }
+        ]
+      },
+      "Personal & Niche": {
+        title: "IV. Personal & Niche",
+        intro: "Purpose-built sites.",
+        items: [
+          { name: "Personal Bio", desc: "Digital resume.", ex: "Linktree." },
+          { name: "Event", desc: "Temporary info site.", ex: "Weddings." }
+        ]
+      }
+    };
+
+    function updateWebsiteTypeExamples() {
+      const select = document.getElementById('websiteType');
+      const wrap = document.getElementById('websiteTypeExamplesWrap');
+      const box = document.getElementById('websiteTypeExamples');
+      if (!select || !wrap || !box) return;
+      const value = select.value;
+      const data = WEBSITE_TYPE_LIBRARY[value];
+      if (!value || !data) {
+        wrap.style.display = 'none';
+        box.innerHTML = '';
+        return;
+      }
+      let html = `<h4>${data.title}</h4><p>${data.intro}</p><ul>`;
+      data.items.forEach(item => {
+        html += `<li><strong>${item.name}:</strong> ${item.desc}</li>`;
+      });
+      html += `</ul>`;
+      box.innerHTML = html;
+      wrap.style.display = 'block';
+    }
+
+    function resetForm() {
+      if (confirm('Clear all data?')) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+  </script>
 </body>
 </html>
