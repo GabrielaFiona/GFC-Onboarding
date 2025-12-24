@@ -5,13 +5,12 @@ const state = {
   industry: "",
   pages: [],
   addons: [],
-  pagePlans: {}, // Stores notes, sketches, and strategy data
+  pagePlans: {},
   brandingProvided: null,
-  customBranding: { active: false, name: "", price: 0 },
-  flowchartData: { nodes: [], connections: [] } // For Advanced Package Flowchart
+  customBranding: { active: false, name: "", price: 0 }
 };
 
-// Store files in memory
+// New: Store files in memory (cannot be saved to localStorage due to size limits)
 const pageAttachments = {}; 
 
 const BASE_BRAND_KIT_PRICE = 500;
@@ -40,7 +39,7 @@ function nextStep(stepNumber) {
   window.location.href = `step${stepNumber}.html`;
 }
 
-// --- STEP 2 LOGIC (Packages & Pages) ---
+// --- STEP 2 LOGIC ---
 function selectPackage(id, name, price, limit, brandKitBundlePrice, extraPageCost, element) {
   document.querySelectorAll('.package-card').forEach(el => el.classList.remove('selected'));
   if (element) element.classList.add('selected');
@@ -86,16 +85,22 @@ function toggleBrandingPanels(value) {
   saveState();
 }
 
-// STEP 2 FILE UPLOAD
+// STEP 2 FILE UPLOAD (BRANDING)
 let uploadedFiles = []; 
 function handleFileUpload(e) {
   const files = e.target.files;
   const box = document.getElementById('file-staging-box');
   const list = document.getElementById('file-list-content');
-  if (!files || !files.length) { box.classList.add('hidden'); return; }
+  
+  if (!files || !files.length) {
+    box.classList.add('hidden');
+    return;
+  }
+  
   box.classList.remove('hidden');
   list.innerHTML = ''; 
   uploadedFiles = Array.from(files); 
+
   uploadedFiles.forEach(file => {
     const row = document.createElement('div');
     row.className = 'file-list-item';
@@ -103,8 +108,13 @@ function handleFileUpload(e) {
     nameSpan.textContent = file.name;
     const url = URL.createObjectURL(file);
     const link = document.createElement('a');
-    link.href = url; link.download = file.name; link.className = 'btn-download-mini'; link.textContent = 'Download';
-    row.appendChild(nameSpan); row.appendChild(link); list.appendChild(row);
+    link.href = url;
+    link.download = file.name;
+    link.className = 'btn-download-mini';
+    link.textContent = 'Download';
+    row.appendChild(nameSpan);
+    row.appendChild(link);
+    list.appendChild(row);
   });
 }
 
@@ -113,8 +123,11 @@ function downloadAllFiles() {
   uploadedFiles.forEach(file => {
     const url = URL.createObjectURL(file);
     const link = document.createElement('a');
-    link.href = url; link.download = file.name;
-    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   });
 }
 
@@ -126,19 +139,25 @@ function toggleCustomBrandingUI(panelId) {
 function updateCustomBrandingState() {
   const names = document.querySelectorAll('.custom-brand-name');
   const prices = document.querySelectorAll('.custom-brand-price');
-  let nameVal = ""; let priceVal = 0;
+  let nameVal = "";
+  let priceVal = 0;
+
   names.forEach(input => { if(input.value) nameVal = input.value; });
   prices.forEach(input => { if(input.value) priceVal = Number(input.value); });
+  
   names.forEach(input => input.value = nameVal);
   prices.forEach(input => input.value = priceVal || "");
+
   state.customBranding = { active: (priceVal > 0), name: nameVal || "Custom Branding", price: priceVal };
-  calculateTotal(); saveState();
+  calculateTotal();
+  saveState();
 }
 
 function initPageBuilder() {
   const input = document.getElementById('industryInput');
   const fileInput = document.getElementById('brandingUploads');
   if (fileInput) fileInput.addEventListener('change', handleFileUpload);
+
   if (state.brandingProvided) {
     const radio = document.querySelector(`input[name="brandingProvided"][value="${state.brandingProvided}"]`);
     if (radio) { radio.checked = true; toggleBrandingPanels(state.brandingProvided); }
@@ -187,13 +206,19 @@ function addPage(nameRaw) {
   if (!state.pages.includes(name)) {
     state.pages.push(name);
     if (input) input.value = '';
-    renderActivePages(); generateSuggestions(state.industry || ''); calculateTotal(); saveState();
+    renderActivePages();
+    generateSuggestions(state.industry || '');
+    calculateTotal();
+    saveState();
   }
 }
 
 function removePage(name) {
   state.pages = state.pages.filter(p => p !== name);
-  renderActivePages(); generateSuggestions(state.industry || ''); calculateTotal(); saveState();
+  renderActivePages();
+  generateSuggestions(state.industry || '');
+  calculateTotal();
+  saveState();
 }
 
 function renderActivePages() {
@@ -272,7 +297,6 @@ function initStep3() {
   else if (pkgId === 'advanced') renderAdvancedPlan(container);
 }
 
-// --- RENDER FUNCTIONS FOR PACKAGES ---
 function renderBasicPlan(container) {
   state.pages.forEach((page, index) => {
     const noteVal = state.pagePlans[page]?.notes || '';
@@ -283,105 +307,23 @@ function renderBasicPlan(container) {
           <label>Page Goals & Content Notes</label>
           <textarea rows="5" oninput="savePageNote('${page}', this.value)" placeholder="What should be on this page?">${noteVal}</textarea>
         </div>
-      </div>`;
+      </div>
+    `;
     container.insertAdjacentHTML('beforeend', html);
   });
 }
 
+// --- NEW STANDARD PLAN (Step 3) ---
 function renderStandardPlan(container) {
   const intro = `<div style="text-align:center; margin-bottom:30px;"><p>Sketch your layout for Mobile and Desktop views.</p></div>`;
   container.insertAdjacentHTML('beforeend', intro);
-  generatePageCards(container);
-  appendDownloadAllBtn(container);
-}
 
-function renderAdvancedPlan(container) {
-  // 1. Ecosystem Map (Flowchart)
-  const intro = `<div style="text-align:center; margin-bottom:30px;"><p>Part 1: Ecosystem Flow Map. Visualize how pages and tools connect.</p></div>`;
-  container.insertAdjacentHTML('beforeend', intro);
-
-  const flowchartHtml = `
-    <div class="collapsible">
-      <div class="collapsible-header">
-        <div class="collapsible-title">Ecosystem Flowchart</div>
-        <div class="collapsible-chevron">▼</div>
-      </div>
-      <div class="collapsible-body" style="display:block; padding:25px;">
-        <div class="flowchart-toolbar">
-           <div>
-             <button class="fc-btn" onclick="addFlowchartNode('tool', 'Booking Tool')">+ Booking</button>
-             <button class="fc-btn" onclick="addFlowchartNode('tool', 'Payment')">+ Payment</button>
-             <button class="fc-btn" onclick="addFlowchartNode('tool', 'Email')">+ Email</button>
-             <button class="fc-btn" onclick="addFlowchartNode('tool', 'Custom Tool')">+ Custom Node</button>
-           </div>
-           <div>
-             <button class="fc-btn active" id="fcModeBtn" onclick="toggleFlowchartMode()">Mode: Move</button>
-             <button class="fc-btn" onclick="clearFlowchart()">Reset Map</button>
-           </div>
-        </div>
-        <canvas id="flowchartCanvas" class="flowchart-container" width="900" height="600"></canvas>
-        <p style="font-size:0.8rem; opacity:0.7; text-align:center; margin-top:10px;">Drag nodes to arrange. Switch mode to 'Connect' to draw arrows between them.</p>
-      </div>
-    </div>
-  `;
-  container.insertAdjacentHTML('beforeend', flowchartHtml);
-  setTimeout(initAdvancedFlowchart, 100);
-
-  // 2. Page Planners with Strategy Board
-  const part2 = `<div style="text-align:center; margin: 50px 0 30px 0;"><h2>Part 2: Detailed Page Planners</h2><p>Define strategy, SEO, and Layout for each page.</p></div>`;
-  container.insertAdjacentHTML('beforeend', part2);
-  
-  // Use the same generator as Standard, but we will inject Strategy Boards inside
-  generatePageCards(container, true); 
-  appendDownloadAllBtn(container);
-}
-
-// --- HELPER: Generate Page Cards (Shared by Standard & Advanced) ---
-function generatePageCards(container, isAdvanced = false) {
   state.pages.forEach((page, index) => {
     const mobileId = `cvs-m-${index}`;
     const desktopId = `cvs-d-${index}`;
     const groupName = `group-${index}`;
     const fileListId = `file-list-${index}`;
     const orderOptions = state.pages.map((_, i) => `<option value="${i}" ${i === index ? 'selected' : ''}>Order: ${i + 1}</option>`).join('');
-
-    // Strategy Board HTML (Only for Advanced)
-    let strategyHtml = '';
-    if (isAdvanced) {
-      const plan = state.pagePlans[page] || {};
-      const seo = plan.seo || '';
-      const conv = plan.conversion || 'none';
-      const integrations = plan.integrations || [];
-      
-      strategyHtml = `
-        <div class="strategy-board">
-          <h4>Strategy & Tech Specs</h4>
-          <div class="strategy-grid">
-            <div>
-              <label>SEO Focus Keyword</label>
-              <input type="text" placeholder="e.g. Luxury Hotel Miami" value="${seo}" oninput="savePageStrategy('${page}', 'seo', this.value)" />
-            </div>
-            <div>
-              <label>Conversion Action</label>
-              <select onchange="savePageStrategy('${page}', 'conversion', this.value)">
-                <option value="none" ${conv === 'none' ? 'selected' : ''}>No specific action</option>
-                <option value="book" ${conv === 'book' ? 'selected' : ''}>Book Appointment</option>
-                <option value="buy" ${conv === 'buy' ? 'selected' : ''}>Buy Product</option>
-                <option value="contact" ${conv === 'contact' ? 'selected' : ''}>Fill Contact Form</option>
-                <option value="subscribe" ${conv === 'subscribe' ? 'selected' : ''}>Subscribe / Sign Up</option>
-                <option value="call" ${conv === 'call' ? 'selected' : ''}>Click to Call</option>
-              </select>
-            </div>
-          </div>
-          <label>Integration Needs</label>
-          <div class="integration-pills">
-            ${['Booking System', 'Payment Gateway', 'Contact Form', 'Analytics', 'Social Feed', 'Live Chat'].map(tech => 
-              `<div class="int-pill ${integrations.includes(tech) ? 'active' : ''}" onclick="togglePageIntegration('${page}', '${tech}', this)">${tech}</div>`
-            ).join('')}
-          </div>
-        </div>
-      `;
-    }
 
     const html = `
       <div class="plan-card" id="card-${index}">
@@ -397,18 +339,17 @@ function generatePageCards(container, isAdvanced = false) {
           </div>
         </div>
         <div class="plan-card-body">
-          ${strategyHtml}
           
           <div class="mockup-toolbar" id="toolbar-${index}">
-            <button class="tool-btn active" onclick="setTool('${groupName}', 'pencil', this)">✏️</button>
-            <button class="tool-btn" onclick="setTool('${groupName}', 'box', this)">⬜</button>
-            <button class="tool-btn" onclick="setTool('${groupName}', 'rect', this)">▬</button>
-            <button class="tool-btn" onclick="setTool('${groupName}', 'triangle', this)">🔺</button>
-            <button class="tool-btn" onclick="setTool('${groupName}', 'circle', this)">⭕</button>
-            <button class="tool-btn" onclick="setTool('${groupName}', 'text', this)">T</button>
-            <button class="tool-btn" onclick="setTool('${groupName}', 'eraser', this)">🧹</button>
+            <button class="tool-btn active" title="Pencil" onclick="setTool('${groupName}', 'pencil', this)">✏️</button>
+            <button class="tool-btn" title="Box" onclick="setTool('${groupName}', 'box', this)">⬜</button>
+            <button class="tool-btn" title="Rectangle" onclick="setTool('${groupName}', 'rect', this)">▬</button>
+            <button class="tool-btn" title="Triangle" onclick="setTool('${groupName}', 'triangle', this)">🔺</button>
+            <button class="tool-btn" title="Circle" onclick="setTool('${groupName}', 'circle', this)">⭕</button>
+            <button class="tool-btn" title="Text" onclick="setTool('${groupName}', 'text', this)">T</button>
+            <button class="tool-btn" title="Eraser" onclick="setTool('${groupName}', 'eraser', this)">🧹</button>
             <div style="width:1px; height:20px; background:var(--border-light); margin:0 10px;"></div>
-            <button class="tool-btn tool-btn-danger" onclick="resetCanvasGroup('${mobileId}', '${desktopId}')">🗑️</button>
+            <button class="tool-btn tool-btn-danger" title="Clear Canvas" onclick="resetCanvasGroup('${mobileId}', '${desktopId}')">🗑️</button>
           </div>
 
           <div class="canvas-pair-container">
@@ -430,14 +371,19 @@ function generatePageCards(container, isAdvanced = false) {
             <div class="plan-files-area">
               <label>Page Assets</label>
               <div class="file-upload-wrapper">
-                 <label for="file-input-${index}" class="custom-file-upload"><span style="font-size:1.2rem;">📂</span><br>Click to Upload</label>
+                 <label for="file-input-${index}" class="custom-file-upload">
+                   <span style="font-size:1.2rem;">📂</span><br>Click to Upload
+                 </label>
                  <input id="file-input-${index}" type="file" multiple onchange="handlePageFileUpload('${page}', this, '${fileListId}')" />
               </div>
+              
               <div id="${fileListId}" class="mini-file-list"></div>
+              
               <button class="btn btn-secondary btn-download-mini" style="width:100%; margin-top:15px; padding:12px;" 
                 onclick="downloadPageAssets('${page}', '${mobileId}', '${desktopId}')">Download Sketch & Files ⇩</button>
             </div>
           </div>
+
         </div>
       </div>
     `;
@@ -447,197 +393,189 @@ function generatePageCards(container, isAdvanced = false) {
       initCanvas(mobileId, groupName);
       initCanvas(desktopId, groupName);
       restoreCanvasData(page, mobileId, desktopId);
+      // Restore file list UI if exists
       renderPageFileList(page, fileListId);
     }, 100);
   });
 }
 
-function appendDownloadAllBtn(container) {
-  const btn = `<button class="btn-download-all" onclick="downloadAllProjectAssets()">Download Full Project Assets</button>`;
-  container.insertAdjacentHTML('beforeend', btn);
-}
-
-// --- ADVANCED STRATEGY LOGIC ---
-function savePageStrategy(page, key, value) {
-  if (!state.pagePlans[page]) state.pagePlans[page] = {};
-  state.pagePlans[page][key] = value;
-  saveState();
-}
-
-function togglePageIntegration(page, tech, pillEl) {
-  if (!state.pagePlans[page]) state.pagePlans[page] = {};
-  let ints = state.pagePlans[page].integrations || [];
-  if (ints.includes(tech)) {
-    ints = ints.filter(t => t !== tech);
-    pillEl.classList.remove('active');
-  } else {
-    ints.push(tech);
-    pillEl.classList.add('active');
+// --- FILE UPLOAD LOGIC FOR STEP 3 ---
+function handlePageFileUpload(pageName, input, listId) {
+  if (input.files && input.files.length > 0) {
+    if (!pageAttachments[pageName]) pageAttachments[pageName] = [];
+    
+    // Add new files to array
+    Array.from(input.files).forEach(f => pageAttachments[pageName].push(f));
+    
+    // Update UI
+    renderPageFileList(pageName, listId);
   }
-  state.pagePlans[page].integrations = ints;
-  saveState();
 }
 
-// --- ADVANCED FLOWCHART ENGINE ---
-let fcCanvas, fcCtx;
-let fcNodes = []; 
-let fcConnections = [];
-let fcMode = 'move'; // 'move' or 'connect'
-let fcDragging = null;
-let fcStartNode = null; // For connection line
+function renderPageFileList(pageName, listId) {
+  const container = document.getElementById(listId);
+  if (!container) return;
+  
+  container.innerHTML = '';
+  const files = pageAttachments[pageName] || [];
+  
+  if (files.length === 0) {
+    container.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:5px;">No files attached</div>';
+    return;
+  }
 
-function initAdvancedFlowchart() {
-  fcCanvas = document.getElementById('flowchartCanvas');
-  if (!fcCanvas) return;
-  fcCtx = fcCanvas.getContext('2d');
+  files.forEach(file => {
+    const div = document.createElement('div');
+    div.className = 'page-file-item';
+    div.textContent = `📎 ${file.name}`;
+    container.appendChild(div);
+  });
+}
 
-  // Auto-populate nodes if empty
-  if (state.flowchartData && state.flowchartData.nodes.length > 0) {
-    fcNodes = state.flowchartData.nodes;
-    fcConnections = state.flowchartData.connections || [];
-  } else {
-    // Initial setup based on pages
-    let x = 50, y = 50;
-    state.pages.forEach((page, i) => {
-      fcNodes.push({ id: `p${i}`, text: page, x: x, y: y, w: 120, h: 60, type: 'page' });
-      x += 150;
-      if (x > 700) { x = 50; y += 100; }
+// --- COMBINED DOWNLOAD LOGIC (Sketch + Files) ---
+function downloadPageAssets(pageName, mobileId, desktopId) {
+  // 1. Download Sketch (Mobile + Desktop composite)
+  const mCanvas = document.getElementById(mobileId);
+  const dCanvas = document.getElementById(desktopId);
+  
+  if (mCanvas && dCanvas) {
+    const gap = 20;
+    const w = mCanvas.width + dCanvas.width + gap;
+    const h = Math.max(mCanvas.height, dCanvas.height);
+    const comp = document.createElement('canvas');
+    comp.width = w; comp.height = h;
+    const ctx = comp.getContext('2d');
+    
+    // Background
+    ctx.fillStyle = '#0f1322'; 
+    ctx.fillRect(0,0,w,h);
+    
+    // Draw
+    ctx.drawImage(mCanvas, 0, 0); 
+    ctx.drawImage(dCanvas, mCanvas.width + gap, 0);
+    
+    // Labels
+    ctx.fillStyle = '#fff'; ctx.font = '20px Montserrat';
+    ctx.fillText("Mobile", 10, 30); ctx.fillText("Desktop", mCanvas.width + gap + 10, 30);
+    
+    // Trigger Download
+    const link = document.createElement('a');
+    link.download = `${pageName}-layout-sketch.png`;
+    link.href = comp.toDataURL();
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // 2. Download Attached Files
+  const files = pageAttachments[pageName] || [];
+  if (files.length > 0) {
+    // Add small delay to prevent browser blocking multiple downloads
+    let delay = 500; 
+    files.forEach(file => {
+      setTimeout(() => {
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, delay);
+      delay += 500;
     });
   }
-
-  drawFlowchart();
-
-  // Event Listeners
-  fcCanvas.addEventListener('mousedown', fcMouseDown);
-  fcCanvas.addEventListener('mousemove', fcMouseMove);
-  fcCanvas.addEventListener('mouseup', fcMouseUp);
 }
 
-function drawFlowchart() {
-  fcCtx.clearRect(0, 0, fcCanvas.width, fcCanvas.height);
-  
-  // Draw Connections
-  fcCtx.strokeStyle = '#2CA6E0'; fcCtx.lineWidth = 2;
-  fcConnections.forEach(conn => {
-    const n1 = fcNodes.find(n => n.id === conn.from);
-    const n2 = fcNodes.find(n => n.id === conn.to);
-    if (n1 && n2) {
-      fcCtx.beginPath();
-      fcCtx.moveTo(n1.x + n1.w/2, n1.y + n1.h/2);
-      fcCtx.lineTo(n2.x + n2.w/2, n2.y + n2.h/2);
-      fcCtx.stroke();
-      // Arrowhead
-      const angle = Math.atan2((n2.y + n2.h/2) - (n1.y + n1.h/2), (n2.x + n2.w/2) - (n1.x + n1.w/2));
-      fcCtx.beginPath();
-      fcCtx.moveTo(n2.x + n2.w/2, n2.y + n2.h/2);
-      fcCtx.lineTo((n2.x + n2.w/2) - 10 * Math.cos(angle - Math.PI/6), (n2.y + n2.h/2) - 10 * Math.sin(angle - Math.PI/6));
-      fcCtx.lineTo((n2.x + n2.w/2) - 10 * Math.cos(angle + Math.PI/6), (n2.y + n2.h/2) - 10 * Math.sin(angle + Math.PI/6));
-      fcCtx.fillStyle = '#2CA6E0'; fcCtx.fill();
+function togglePlanCard(header) {
+  const card = header.closest('.plan-card');
+  card.classList.toggle('collapsed');
+}
+
+// REORDERING LOGIC
+function changePageOrder(oldIndex, newIndexStr) {
+  const newIndex = parseInt(newIndexStr);
+  if (oldIndex === newIndex) return;
+  saveAllCanvasStates();
+  const item = state.pages.splice(oldIndex, 1)[0];
+  state.pages.splice(newIndex, 0, item);
+  saveState();
+  initStep3();
+}
+
+function saveAllCanvasStates() {
+  state.pages.forEach((page, idx) => {
+    const mCanvas = document.getElementById(`cvs-m-${idx}`);
+    const dCanvas = document.getElementById(`cvs-d-${idx}`);
+    if (mCanvas && dCanvas) {
+      if (!state.pagePlans[page]) state.pagePlans[page] = {};
+      state.pagePlans[page].mobileData = mCanvas.toDataURL();
+      state.pagePlans[page].desktopData = dCanvas.toDataURL();
     }
   });
-
-  // Draw Temp Connection Line
-  if (fcMode === 'connect' && fcStartNode && fcDragging) {
-    fcCtx.beginPath();
-    fcCtx.moveTo(fcStartNode.x + fcStartNode.w/2, fcStartNode.y + fcStartNode.h/2);
-    fcCtx.lineTo(fcDragging.x, fcDragging.y); // Mouse pos
-    fcCtx.strokeStyle = 'rgba(44, 166, 224, 0.5)'; fcCtx.setLineDash([5, 5]); fcCtx.stroke(); fcCtx.setLineDash([]);
-  }
-
-  // Draw Nodes
-  fcNodes.forEach(node => {
-    fcCtx.fillStyle = node.type === 'page' ? '#1a1e2e' : '#050508';
-    fcCtx.strokeStyle = node === fcStartNode ? '#fff' : '#2CA6E0';
-    fcCtx.lineWidth = node === fcStartNode ? 2 : 1;
-    fcCtx.fillRect(node.x, node.y, node.w, node.h);
-    fcCtx.strokeRect(node.x, node.y, node.w, node.h);
-    
-    fcCtx.fillStyle = '#fff'; fcCtx.font = '12px Montserrat'; fcCtx.textAlign = 'center';
-    fcCtx.fillText(node.text, node.x + node.w/2, node.y + node.h/2 + 4);
-  });
-}
-
-function fcMouseDown(e) {
-  const { x, y } = getMousePos(e);
-  const clickedNode = fcNodes.find(n => x >= n.x && x <= n.x + n.w && y >= n.y && y <= n.y + n.h);
-
-  if (fcMode === 'move') {
-    if (clickedNode) { fcDragging = clickedNode; fcDragging.offsetX = x - clickedNode.x; fcDragging.offsetY = y - clickedNode.y; }
-  } else if (fcMode === 'connect') {
-    if (clickedNode) { fcStartNode = clickedNode; fcDragging = { x, y }; } // dragging obj just stores mouse pos for line drawing
-  }
-}
-
-function fcMouseMove(e) {
-  const { x, y } = getMousePos(e);
-  if (fcMode === 'move' && fcDragging) {
-    fcDragging.x = x - fcDragging.offsetX; fcDragging.y = y - fcDragging.offsetY;
-    drawFlowchart();
-  } else if (fcMode === 'connect' && fcStartNode) {
-    fcDragging = { x, y };
-    drawFlowchart();
-  }
-}
-
-function fcMouseUp(e) {
-  const { x, y } = getMousePos(e);
-  if (fcMode === 'move') {
-    fcDragging = null;
-    saveFlowchart();
-  } else if (fcMode === 'connect' && fcStartNode) {
-    const droppedNode = fcNodes.find(n => x >= n.x && x <= n.x + n.w && y >= n.y && y <= n.y + n.h);
-    if (droppedNode && droppedNode !== fcStartNode) {
-      fcConnections.push({ from: fcStartNode.id, to: droppedNode.id });
-      saveFlowchart();
-    }
-    fcStartNode = null; fcDragging = null;
-    drawFlowchart();
-  }
-}
-
-function getMousePos(evt) {
-  const rect = fcCanvas.getBoundingClientRect();
-  return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-}
-
-function addFlowchartNode(type, defaultText) {
-  const name = prompt("Enter Name:", defaultText);
-  if (name) {
-    fcNodes.push({ id: 'n' + Date.now(), text: name, x: 50, y: 50, w: 120, h: 60, type: type });
-    drawFlowchart();
-    saveFlowchart();
-  }
-}
-
-function toggleFlowchartMode() {
-  fcMode = fcMode === 'move' ? 'connect' : 'move';
-  document.getElementById('fcModeBtn').textContent = `Mode: ${fcMode.charAt(0).toUpperCase() + fcMode.slice(1)}`;
-  document.getElementById('fcModeBtn').classList.toggle('active', fcMode === 'connect');
-}
-
-function clearFlowchart() {
-  if (confirm("Reset flowchart?")) {
-    state.flowchartData = { nodes: [], connections: [] };
-    fcNodes = []; fcConnections = [];
-    initAdvancedFlowchart(); // re-init to pull pages
-    saveState();
-  }
-}
-
-function saveFlowchart() {
-  state.flowchartData = { nodes: fcNodes, connections: fcConnections };
   saveState();
 }
 
-// --- STANDARD CANVAS & FILE UTILS (Shared) ---
-function savePageNote(pageName, text) { if (!state.pagePlans[pageName]) state.pagePlans[pageName] = {}; state.pagePlans[pageName].notes = text; saveState(); }
+function restoreCanvasData(page, mId, dId) {
+  const plan = state.pagePlans[page];
+  if (!plan) return;
+  if (plan.mobileData) {
+    const img = new Image();
+    img.onload = function() { document.getElementById(mId).getContext('2d').drawImage(img, 0, 0); };
+    img.src = plan.mobileData;
+  }
+  if (plan.desktopData) {
+    const img = new Image();
+    img.onload = function() { document.getElementById(dId).getContext('2d').drawImage(img, 0, 0); };
+    img.src = plan.desktopData;
+  }
+}
+
+function renderAdvancedPlan(container) {
+  const html = `
+    <div class="integration-row">
+      <div class="plan-card">
+        <div class="plan-card-header">System Flowchart</div>
+        <div class="plan-card-body">
+          <div class="mockup-toolbar">
+            <button class="tool-btn" onclick="setTool('advancedGroup', 'box')">⬜</button>
+            <button class="tool-btn" onclick="setTool('advancedGroup', 'line')">🔗</button>
+            <button class="tool-btn" onclick="resetCanvasGroup('advancedCanvas')">🗑️</button>
+          </div>
+          <canvas id="advancedCanvas" class="canvas-container" style="background:#0f1322; width:100%; height:500px;" width="800" height="500"></canvas>
+        </div>
+      </div>
+      <div class="integration-list">
+        <h4>Integrations</h4>
+        <div class="integration-item">Stripe / Payments</div>
+        <div class="integration-item">Mailchimp</div>
+        <textarea rows="10" oninput="saveAdvancedNotes(this.value)">${state.advancedNotes || ''}</textarea>
+      </div>
+    </div>
+  `;
+  container.insertAdjacentHTML('beforeend', html);
+  setTimeout(() => initCanvas('advancedCanvas', 'advancedGroup'), 100);
+}
+
+function savePageNote(pageName, text) {
+  if (!state.pagePlans[pageName]) state.pagePlans[pageName] = {};
+  state.pagePlans[pageName].notes = text;
+  saveState();
+}
+
 function saveAdvancedNotes(text) { state.advancedNotes = text; saveState(); }
 
+// --- CANVAS TOOLS ---
 const canvasState = {}; 
+
 function setTool(groupName, tool, btn) {
   if (!canvasState[groupName]) canvasState[groupName] = { tool: 'pencil' };
   canvasState[groupName].tool = tool;
-  if (btn) { btn.parentElement.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+  if (btn) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
 }
 
 function initCanvas(canvasId, groupName) {
@@ -645,143 +583,135 @@ function initCanvas(canvasId, groupName) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   if (!canvasState[groupName]) canvasState[groupName] = { tool: 'pencil' };
-  let isDrawing = false; let startX, startY;
-  ctx.strokeStyle = '#2CA6E0'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.fillStyle = 'rgba(44, 166, 224, 0.1)';
+
+  let isDrawing = false;
+  let startX, startY;
+
+  ctx.strokeStyle = '#2CA6E0';
+  ctx.lineWidth = 3; 
+  ctx.lineCap = 'round';
+  ctx.fillStyle = 'rgba(44, 166, 224, 0.1)';
 
   canvas.addEventListener('mousedown', e => {
-    isDrawing = true; startX = e.offsetX; startY = e.offsetY;
+    isDrawing = true;
+    startX = e.offsetX;
+    startY = e.offsetY;
     const tool = canvasState[groupName].tool;
-    ctx.beginPath(); ctx.moveTo(startX, startY);
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
     if (tool === 'text') {
        const text = prompt("Enter text:", "Header");
-       if (text) { ctx.fillStyle = '#fff'; ctx.font = '16px Montserrat'; ctx.fillText(text, startX, startY); ctx.fillStyle = 'rgba(44, 166, 224, 0.1)'; }
+       if (text) {
+         ctx.fillStyle = '#fff';
+         ctx.font = '16px Montserrat';
+         ctx.fillText(text, startX, startY);
+         ctx.fillStyle = 'rgba(44, 166, 224, 0.1)'; 
+       }
        isDrawing = false;
     }
   });
+
   canvas.addEventListener('mousemove', e => {
     if (!isDrawing) return;
     const tool = canvasState[groupName].tool;
-    const x = e.offsetX; const y = e.offsetY;
-    if (tool === 'pencil') { ctx.lineWidth = 3; ctx.globalCompositeOperation = 'source-over'; ctx.lineTo(x, y); ctx.stroke(); }
-    else if (tool === 'eraser') { ctx.lineWidth = 20; ctx.globalCompositeOperation = 'destination-out'; ctx.lineTo(x, y); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; }
+    const x = e.offsetX;
+    const y = e.offsetY;
+    if (tool === 'pencil') {
+      ctx.lineWidth = 3; ctx.globalCompositeOperation = 'source-over'; ctx.lineTo(x, y); ctx.stroke();
+    } else if (tool === 'eraser') {
+      ctx.lineWidth = 20; ctx.globalCompositeOperation = 'destination-out'; ctx.lineTo(x, y); ctx.stroke(); ctx.globalCompositeOperation = 'source-over'; 
+    }
   });
+
   canvas.addEventListener('mouseup', e => {
-    if (!isDrawing) return; isDrawing = false;
-    const endX = e.offsetX; const endY = e.offsetY;
+    if (!isDrawing) return;
+    isDrawing = false;
+    const endX = e.offsetX;
+    const endY = e.offsetY;
     const tool = canvasState[groupName].tool;
     ctx.lineWidth = 3; ctx.strokeStyle = '#2CA6E0'; ctx.globalCompositeOperation = 'source-over';
-    if (tool === 'box' || tool === 'rect') { ctx.rect(startX, startY, endX - startX, (tool === 'box' ? endX - startX : endY - startY)); ctx.fill(); ctx.stroke(); }
-    else if (tool === 'circle') { const r = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)); ctx.beginPath(); ctx.arc(startX, startY, r, 0, 2*Math.PI); ctx.fill(); ctx.stroke(); }
-    else if (tool === 'triangle') { ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY); ctx.lineTo(startX - (endX - startX), endY); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    if (tool === 'box' || tool === 'rect') {
+      const w = endX - startX;
+      const h = (tool === 'box') ? w : (endY - startY); 
+      ctx.rect(startX, startY, w, h); ctx.fill(); ctx.stroke();
+    } else if (tool === 'circle') {
+      const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+      ctx.beginPath(); ctx.arc(startX, startY, radius, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    } else if (tool === 'triangle') {
+      ctx.beginPath(); ctx.moveTo(startX, startY); ctx.lineTo(endX, endY); ctx.lineTo(startX - (endX - startX), endY); ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
   });
 }
 
 function resetCanvasGroup(id1, id2) {
-  if(confirm("Clear sketches?")) { [id1, id2].forEach(id => { const c = document.getElementById(id); if(c) c.getContext('2d').clearRect(0, 0, c.width, c.height); }); }
-}
-
-function handlePageFileUpload(pageName, input, listId) {
-  if (input.files && input.files.length > 0) {
-    if (!pageAttachments[pageName]) pageAttachments[pageName] = [];
-    Array.from(input.files).forEach(f => pageAttachments[pageName].push(f));
-    renderPageFileList(pageName, listId);
-  }
-}
-function removePageFile(pageName, index, listId) {
-  if (pageAttachments[pageName]) { pageAttachments[pageName].splice(index, 1); renderPageFileList(pageName, listId); }
-}
-function renderPageFileList(pageName, listId) {
-  const container = document.getElementById(listId); if (!container) return;
-  container.innerHTML = ''; const files = pageAttachments[pageName] || [];
-  if (files.length === 0) { container.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:5px;">No files attached</div>'; return; }
-  files.forEach((file, i) => {
-    const div = document.createElement('div'); div.className = 'page-file-item';
-    div.innerHTML = `<span>📎 ${file.name}</span>`;
-    const delBtn = document.createElement('span'); delBtn.innerHTML = '&times;'; delBtn.className = 'delete-file-btn'; delBtn.onclick = () => removePageFile(pageName, i, listId);
-    div.appendChild(delBtn); container.appendChild(div);
-  });
-}
-
-// DOWNLOADING
-async function downloadAllProjectAssets() {
-  if (!confirm("Download all assets? (Allow multiple downloads if prompted)")) return;
-  for (const page of state.pages) {
-    const index = state.pages.indexOf(page);
-    downloadPageSketchOnly(page, `cvs-m-${index}`, `cvs-d-${index}`);
-    await new Promise(r => setTimeout(r, 800));
-    const files = pageAttachments[page] || [];
-    for (const file of files) {
-      const link = document.createElement('a'); link.href = URL.createObjectURL(file); link.download = `[${page}] ${file.name}`;
-      document.body.appendChild(link); link.click(); document.body.removeChild(link);
-      await new Promise(r => setTimeout(r, 500));
-    }
-  }
-}
-function downloadPageAssets(pageName, mId, dId) {
-  downloadPageSketchOnly(pageName, mId, dId);
-  const files = pageAttachments[pageName] || [];
-  let delay = 500;
-  files.forEach(file => { setTimeout(() => {
-      const link = document.createElement('a'); link.href = URL.createObjectURL(file); link.download = file.name;
-      document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    }, delay); delay += 500;
-  });
-}
-function downloadPageSketchOnly(pageName, mId, dId) {
-  const m = document.getElementById(mId); const d = document.getElementById(dId);
-  if (m && d) {
-    const w = m.width + d.width + 20; const h = Math.max(m.height, d.height);
-    const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d');
-    ctx.fillStyle = '#0f1322'; ctx.fillRect(0,0,w,h);
-    ctx.drawImage(m, 0, 0); ctx.drawImage(d, m.width + 20, 0);
-    ctx.fillStyle = '#fff'; ctx.font = '20px Montserrat'; ctx.fillText("Mobile", 10, 30); ctx.fillText("Desktop", m.width + 30, 30);
-    const link = document.createElement('a'); link.download = `${pageName}-layout-sketch.png`; link.href = c.toDataURL();
-    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  if(confirm("Clear sketches?")) {
+    [id1, id2].forEach(id => {
+      const c = document.getElementById(id);
+      if(c) { c.getContext('2d').clearRect(0, 0, c.width, c.height); }
+    });
   }
 }
 
-function togglePlanCard(header) { header.closest('.plan-card').classList.toggle('collapsed'); }
-function changePageOrder(oldIndex, newIndexStr) {
-  const newIndex = parseInt(newIndexStr); if (oldIndex === newIndex) return;
-  saveAllCanvasStates();
-  const item = state.pages.splice(oldIndex, 1)[0]; state.pages.splice(newIndex, 0, item);
-  saveState(); initStep3();
+function toggleBrandKit(element) {
+  state.brandKit = !state.brandKit;
+  document.querySelectorAll('.brand-kit-ref').forEach(el => { el.classList.toggle('selected', state.brandKit); });
+  calculateTotal(); updateBrandKitDisplay(); saveState();
 }
-function saveAllCanvasStates() {
-  state.pages.forEach((page, idx) => {
-    const m = document.getElementById(`cvs-m-${idx}`); const d = document.getElementById(`cvs-d-${idx}`);
-    if (m && d) { if (!state.pagePlans[page]) state.pagePlans[page] = {}; state.pagePlans[page].mobileData = m.toDataURL(); state.pagePlans[page].desktopData = d.toDataURL(); }
-  });
-  saveState();
-}
-function restoreCanvasData(page, mId, dId) {
-  const plan = state.pagePlans[page]; if (!plan) return;
-  if (plan.mobileData) { const i = new Image(); i.onload = () => document.getElementById(mId).getContext('2d').drawImage(i,0,0); i.src = plan.mobileData; }
-  if (plan.desktopData) { const i = new Image(); i.onload = () => document.getElementById(dId).getContext('2d').drawImage(i,0,0); i.src = plan.desktopData; }
-}
-function toggleBrandKit(element) { state.brandKit = !state.brandKit; document.querySelectorAll('.brand-kit-ref').forEach(el => el.classList.toggle('selected', state.brandKit)); calculateTotal(); updateBrandKitDisplay(); saveState(); }
+
 function updateBrandKitDisplay() {
   document.querySelectorAll('.brand-kit-ref').forEach(bar => {
-    const finalPriceEl = bar.querySelector('.bk-final-price'); if (!finalPriceEl) return;
+    const ogPriceEl = bar.querySelector('.bk-og-price');
+    const discountLabelEl = bar.querySelector('.bk-discount-label');
+    const finalPriceEl = bar.querySelector('.bk-final-price');
+    if (!finalPriceEl) return;
     const hasBundle = !!(state.package && state.package.brandKitBundlePrice);
-    finalPriceEl.textContent = `$${(hasBundle ? Number(state.package.brandKitBundlePrice) : BASE_BRAND_KIT_PRICE).toLocaleString()}`;
+    const displayPrice = hasBundle ? Number(state.package.brandKitBundlePrice) : BASE_BRAND_KIT_PRICE;
+    if (hasBundle && displayPrice !== BASE_BRAND_KIT_PRICE) {
+      if (ogPriceEl) { ogPriceEl.textContent = `$${BASE_BRAND_KIT_PRICE.toLocaleString()}`; ogPriceEl.style.display = 'inline'; }
+      if (discountLabelEl) discountLabelEl.style.display = 'block';
+    } else {
+      if (ogPriceEl) ogPriceEl.style.display = 'none';
+      if (discountLabelEl) discountLabelEl.style.display = 'none';
+    }
+    finalPriceEl.textContent = `$${displayPrice.toLocaleString()}`;
     bar.classList.toggle('selected', !!state.brandKit);
   });
 }
-function toggleWidget() { document.getElementById('floating-widget').classList.toggle('collapsed'); }
-function togglePackageDetails(buttonEl) {
-  const card = buttonEl.closest('.package-card'); if (card) { const expanded = card.classList.toggle('expanded'); buttonEl.textContent = expanded ? 'Close Details' : 'View Details'; }
+
+function toggleWidget() {
+  const widget = document.getElementById('floating-widget');
+  if (widget) widget.classList.toggle('collapsed');
 }
+
+function togglePackageDetails(buttonEl) {
+  const card = buttonEl.closest('.package-card');
+  if (card) {
+    const expanded = card.classList.toggle('expanded');
+    buttonEl.textContent = expanded ? 'Close Details' : 'View Details';
+  }
+}
+
 function initCollapsibles() {
-  document.querySelectorAll('[data-collapsible]').forEach(s => {
-    const h = s.querySelector('[data-collapsible-header]');
-    if (!h || h.hasAttribute('dhl')) return;
-    h.setAttribute('dhl', 'true'); h.addEventListener('click', (e) => { e.preventDefault(); s.classList.toggle('collapsed'); });
+  const sections = document.querySelectorAll('[data-collapsible]');
+  sections.forEach(section => {
+    const header = section.querySelector('[data-collapsible-header]');
+    if (!header || header.hasAttribute('data-has-listener')) return;
+    header.setAttribute('data-has-listener', 'true');
+    header.addEventListener('click', (e) => {
+      e.preventDefault();
+      section.classList.toggle('collapsed');
+    });
   });
 }
+
 document.addEventListener('DOMContentLoaded', () => {
-  loadState(); initCollapsibles();
-  if (window.location.pathname.includes('step2')) { initPageBuilder(); if(state.package) handlePackageSelected(true); }
+  loadState();
+  initCollapsibles();
+  if (window.location.pathname.includes('step2')) {
+    initPageBuilder();
+    if(state.package) handlePackageSelected(true);
+  }
   if (window.location.pathname.includes('step3')) initStep3();
-  calculateTotal(); updateBrandKitDisplay();
+  calculateTotal();
+  updateBrandKitDisplay();
 });
