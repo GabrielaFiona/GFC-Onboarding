@@ -10,7 +10,7 @@ const state = {
   customBranding: { active: false, name: "", price: 0 }
 };
 
-// New: Store files in memory (cannot be saved to localStorage due to size limits)
+// Store files in memory
 const pageAttachments = {}; 
 
 const BASE_BRAND_KIT_PRICE = 500;
@@ -393,21 +393,31 @@ function renderStandardPlan(container) {
       initCanvas(mobileId, groupName);
       initCanvas(desktopId, groupName);
       restoreCanvasData(page, mobileId, desktopId);
-      // Restore file list UI if exists
       renderPageFileList(page, fileListId);
     }, 100);
   });
+
+  // ADD "DOWNLOAD ALL" BUTTON AT BOTTOM
+  const downloadAllBtn = `
+    <button class="btn-download-all" onclick="downloadAllProjectAssets()">
+      Download Full Project Assets
+    </button>
+  `;
+  container.insertAdjacentHTML('beforeend', downloadAllBtn);
 }
 
-// --- FILE UPLOAD LOGIC FOR STEP 3 ---
+// --- FILE UPLOAD LOGIC ---
 function handlePageFileUpload(pageName, input, listId) {
   if (input.files && input.files.length > 0) {
     if (!pageAttachments[pageName]) pageAttachments[pageName] = [];
-    
-    // Add new files to array
     Array.from(input.files).forEach(f => pageAttachments[pageName].push(f));
-    
-    // Update UI
+    renderPageFileList(pageName, listId);
+  }
+}
+
+function removePageFile(pageName, index, listId) {
+  if (pageAttachments[pageName]) {
+    pageAttachments[pageName].splice(index, 1);
     renderPageFileList(pageName, listId);
   }
 }
@@ -424,20 +434,71 @@ function renderPageFileList(pageName, listId) {
     return;
   }
 
-  files.forEach(file => {
+  files.forEach((file, i) => {
     const div = document.createElement('div');
     div.className = 'page-file-item';
-    div.textContent = `📎 ${file.name}`;
+    div.innerHTML = `<span>📎 ${file.name}</span>`;
+    
+    const delBtn = document.createElement('span');
+    delBtn.innerHTML = '&times;';
+    delBtn.className = 'delete-file-btn';
+    delBtn.title = 'Remove File';
+    delBtn.onclick = () => removePageFile(pageName, i, listId);
+    
+    div.appendChild(delBtn);
     container.appendChild(div);
   });
 }
 
-// --- COMBINED DOWNLOAD LOGIC (Sketch + Files) ---
+// --- DOWNLOAD LOGIC ---
+async function downloadAllProjectAssets() {
+  if (!confirm("This will download all sketches and attached files for every page. If your browser prompts, please allow multiple downloads.")) return;
+
+  for (const page of state.pages) {
+    const index = state.pages.indexOf(page);
+    const mobileId = `cvs-m-${index}`;
+    const desktopId = `cvs-d-${index}`;
+    
+    // Download Sketch
+    downloadPageSketchOnly(page, mobileId, desktopId);
+    await new Promise(r => setTimeout(r, 800)); // Delay to prevent blocking
+
+    // Download Files
+    const files = pageAttachments[page] || [];
+    for (const file of files) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(file);
+      link.download = `[${page}] ${file.name}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+}
+
 function downloadPageAssets(pageName, mobileId, desktopId) {
-  // 1. Download Sketch (Mobile + Desktop composite)
+  downloadPageSketchOnly(pageName, mobileId, desktopId);
+  
+  const files = pageAttachments[pageName] || [];
+  let delay = 500;
+  files.forEach(file => {
+    setTimeout(() => {
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }, delay);
+    delay += 500;
+  });
+}
+
+function downloadPageSketchOnly(pageName, mobileId, desktopId) {
   const mCanvas = document.getElementById(mobileId);
   const dCanvas = document.getElementById(desktopId);
-  
   if (mCanvas && dCanvas) {
     const gap = 20;
     const w = mCanvas.width + dCanvas.width + gap;
@@ -445,45 +506,16 @@ function downloadPageAssets(pageName, mobileId, desktopId) {
     const comp = document.createElement('canvas');
     comp.width = w; comp.height = h;
     const ctx = comp.getContext('2d');
-    
-    // Background
-    ctx.fillStyle = '#0f1322'; 
-    ctx.fillRect(0,0,w,h);
-    
-    // Draw
-    ctx.drawImage(mCanvas, 0, 0); 
-    ctx.drawImage(dCanvas, mCanvas.width + gap, 0);
-    
-    // Labels
+    ctx.fillStyle = '#0f1322'; ctx.fillRect(0,0,w,h);
+    ctx.drawImage(mCanvas, 0, 0); ctx.drawImage(dCanvas, mCanvas.width + gap, 0);
     ctx.fillStyle = '#fff'; ctx.font = '20px Montserrat';
     ctx.fillText("Mobile", 10, 30); ctx.fillText("Desktop", mCanvas.width + gap + 10, 30);
-    
-    // Trigger Download
     const link = document.createElement('a');
     link.download = `${pageName}-layout-sketch.png`;
     link.href = comp.toDataURL();
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
-
-  // 2. Download Attached Files
-  const files = pageAttachments[pageName] || [];
-  if (files.length > 0) {
-    // Add small delay to prevent browser blocking multiple downloads
-    let delay = 500; 
-    files.forEach(file => {
-      setTimeout(() => {
-        const url = URL.createObjectURL(file);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = file.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }, delay);
-      delay += 500;
-    });
   }
 }
 
