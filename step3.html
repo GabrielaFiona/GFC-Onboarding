@@ -1,33 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Step 3: Strategic Planning</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Onboarding - Planning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="step3">
+
+  <div id="floating-widget" class="collapsed">
+    <div class="fw-header" onclick="toggleWidget()">
+      <span>Estimated Investment</span>
+      <span id="fw-header-total">$0</span>
+    </div>
+    <div class="fw-content">
+      <div id="fw-items"></div>
+      <div class="fw-total">
+        <span>Total</span>
+        <span id="fw-full-total">$0</span>
+      </div>
+      <div class="fw-deposit">50% Deposit: <span id="fw-deposit">$0</span></div>
+    </div>
+  </div>
 
   <div class="progress-header">
     <div class="progress-bar">
       <div class="progress-line-bg"></div>
-      <div class="progress-line-fill" style="width:100%;"></div>
-      <div class="step-indicator completed">1</div>
-      <div class="step-indicator completed">2</div>
-      <div class="step-indicator active">3<div class="step-label">Planning</div></div>
+      <div class="progress-line-fill" style="width:66.66%;"></div>
+      <div class="step-indicator completed">1 <div class="step-label">Goals</div></div>
+      <div class="step-indicator completed">2 <div class="step-label">Structure</div></div>
+      <div class="step-indicator active">3 <div class="step-label">Plan</div></div>
+      <div class="step-indicator">4 <div class="step-label">Finalize</div></div>
     </div>
   </div>
 
   <div class="container">
-    <h1>Your Strategic Plan.</h1>
-    <p id="planSummary">Loading plan...</p>
+    <div class="step-section active">
 
-    <div id="planningContainer" style="margin-top:40px;"></div>
+      <div style="text-align: center; margin-bottom: 50px;">
+        <h1>Planning & Mockups</h1>
+        <p>Let's visualize the content and flow.</p>
+      </div>
 
-    <div class="step-nav-buttons">
-      <button class="btn btn-secondary" onclick="nextStep(2)">&larr; Adjust Structure</button>
-      <button class="btn btn-primary" onclick="alert('Plan Saved! (This would go to checkout)')">Finalize Plan &rarr;</button>
+      <div class="planning-grid" id="planContainer">
+        </div>
+
+      <div class="step-nav-buttons">
+        <button class="btn btn-secondary" onclick="nextStep(2)">&larr; Back</button>
+        <button class="btn btn-primary" onclick="nextStep(4)">Next: Finalize &rarr;</button>
+      </div>
+
     </div>
   </div>
 
