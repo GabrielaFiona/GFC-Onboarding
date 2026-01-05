@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Onboarding - Finalize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="step4">
+  <div class="progress-header">
+    </div>
+
+  <div class="container">
+    <div class="step-section active">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <h1>Finalize & Kickoff</h1>
+        <p>Review your project scope, add final details, and secure your spot.</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="full-width">
+          <h4>1. Final Business Details</h4>
+        </div>
+        
+        <div>
+          <label>Full Contact Name</label>
+          <input type="text" id="billingName" class="save-me" placeholder="Your Name" />
+        </div>
+        <div>
+          <label>Business / Brand Name</label>
+          <input type="text" id="billingBusiness" class="save-me" placeholder="Company Name" />
+        </div>
+        
+        <div>
+          <label>Your Email (Client)</label>
+          <input type="email" id="billingEmail" class="save-me" placeholder="client@example.com" />
+        </div>
+        <div>
+          <label>Developer/Admin Email</label>
+          <input type="email" id="adminEmail" class="save-me" placeholder="developer@studio.com" value="" />
+          <p style="font-size:0.7rem; opacity:0.6; margin-top:5px;">Where should the invoice be sent?</p>
+        </div>
+
+        <div class="full-width">
+          <label>Phone Number</label>
+          <input type="tel" id="billingPhone" class="save-me" placeholder="(555) 123-4567" />
+        </div>
+        
+        <div class="full-width">
+          <label>Business Address (For Invoice)</label>
+          <input type="text" id="billingAddress" class="save-me" placeholder="Street, City, State, Zip" />
+        </div>
+        
+        <div class="full-width" style="margin-top: 20px;">
+          <h4>2. Additional Services</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 15px;">Select any extra items you need to launch.</p>
+          
+          <div class="package-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="package-card addon-card" onclick="toggleAddon('Business Cards Design', 150, this)">
+               <div class="package-summary" style="padding: 15px;">
+                 <div class="package-name" style="font-size: 1.1rem;">Business Cards</div>
+                 <div class="package-price" style="font-size: 1rem;">$150</div>
+               </div>
+            </div>
+
+            <div class="package-card addon-card" onclick="toggleAddon('Social Media Setup', 250, this)">
+               <div class="package-summary" style="padding: 15px;">
+                 <div class="package-name" style="font-size: 1.1rem;">Social Media Setup</div>
+                 <div class="package-price" style="font-size: 1rem;">$250</div>
+               </div>
+            </div>
+
+            <div class="package-card addon-card" onclick="toggleAddon('SEO Booster', 300, this)">
+               <div class="package-summary" style="padding: 15px;">
+                 <div class="package-name" style="font-size: 1.1rem;">SEO Booster</div>
+                 <div class="package-price" style="font-size: 1rem;">$300</div>
+               </div>
+            </div>
+
+            <div class="package-card addon-card" onclick="toggleAddon('1 Month Maintenance', 100, this)">
+               <div class="package-summary" style="padding: 15px;">
+                 <div class="package-name" style="font-size: 1.1rem;">1 Month Maintenance</div>
+                 <div class="package-price" style="font-size: 1rem;">$100</div>
+               </div>
+            </div>
+          </div>
+
+          <div class="custom-branding-wrapper" style="margin-top: 20px;">
+            <button class="btn-dashed" type="button" onclick="toggleCustomBrandingUI('customServicePanel')">
+              + Add Custom Service
+            </button>
+            <div id="customServicePanel" class="custom-panel hidden" style="margin-top:15px; padding:20px; border:1px dashed var(--border-light); border-radius:10px; background:var(--surface-base);">
+              <div class="form-grid">
+                <div>
+                  <label>Service Name</label>
+                  <input type="text" id="customServiceName" class="custom-service-input" placeholder="e.g. Rush Fee, Flyer Design" oninput="updateCustomServiceState()" />
+                </div>
+                <div>
+                  <label>Price ($)</label>
+                  <input type="number" id="customServicePrice" class="custom-service-input" placeholder="0" oninput="updateCustomServiceState()" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="invoice-box">
+        <h3>Project Summary</h3>
+        <div id="final-invoice-items"></div>
+        <div class="line-item total-row"><span>Total</span><span id="final-invoice-total">$0</span></div>
+        <div class="line-item"><span class="deposit-highlight">Deposit Due</span><span id="final-invoice-deposit">$0</span></div>
+      </div>
+
+      <form id="finalizeForm" onsubmit="handleFinalize(event)">
+         <button type="submit" class="btn btn-primary">Generate Invoice & Email Details</button>
+      </form>
+      
+      <div style="text-align: center; margin-top: 20px;">
+         <button class="btn btn-secondary" onclick="nextStep(3)">&larr; Back to Planning</button>
+      </div>
+
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
