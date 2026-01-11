@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Website Layout Lab</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-dark: #0a0a0f;
+      --accent: #6C5CE7; /* Modern Blurple */
+      --accent-soft: rgba(108, 92, 231, 0.2);
+      --glass: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+      --text-mute: #8a8a9b;
+      --font-head: 'Playfair Display', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* --- LAYOUT UTILS --- */
+    .container { max-width: 500px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; display: flex; flex-direction: column; }
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- TYPOGRAPHY --- */
+    h1 { font-family: var(--font-head); font-size: 2.2rem; text-align: center; margin-bottom: 10px; background: linear-gradient(to right, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    p.subtitle { text-align: center; color: var(--text-mute); font-size: 0.9rem; margin-bottom: 30px; line-height: 1.5; }
+
+    /* --- NAVIGATION --- */
+    .step-nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+    .step-dash { width: 30px; height: 4px; background: var(--border); border-radius: 2px; transition: 0.3s; }
+    .step-dash.active { background: var(--accent); width: 50px; }
+
+    /* --- VIEW 1: PACKAGES (CARDS) --- */
+    .pkg-grid { display: grid; gap: 15px; }
+    .pkg-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px; cursor: pointer;
+      transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
+    }
+    .pkg-card:hover { border-color: var(--accent); background: var(--surface-hover); }
+    .pkg-card.selected { border-color: var(--accent); background: var(--accent-soft); }
+    .pkg-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 4px; }
+    .pkg-desc { font-size: 0.8rem; color: var(--text-mute); }
+    .pkg-price { font-family: var(--font-head); font-size: 1.2rem; color: var(--accent); }
+
+    /* --- VIEW 2: LAB (SEARCH & PREVIEW) --- */
+    .search-wrap { position: relative; margin-bottom: 20px; }
+    .search-input {
+      width: 100%; padding: 16px 20px; border-radius: 50px;
+      background: #15151a; border: 1px solid var(--border);
+      color: #fff; font-size: 1rem; padding-right: 50px;
+      transition: 0.3s;
+    }
+    .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-soft); }
+    .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
+
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+    .tag {
+      padding: 6px 14px; background: var(--glass); border: 1px solid var(--border);
+      border-radius: 20px; font-size: 0.75rem; color: var(--text-mute); cursor: pointer;
+      transition: 0.2s;
+    }
+    .tag:hover { border-color: #fff; color: #fff; }
+
+    /* --- THE PHONE MOCKUP (CSS ART) --- */
+    .phone-mockup {
+      width: 280px; height: 520px; margin: 0 auto;
+      background: #000; border-radius: 40px;
+      border: 8px solid #2a2a2a;
+      box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+      position: relative; overflow: hidden;
+    }
+    .phone-notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 25px; background: #2a2a2a;
+      border-radius: 0 0 16px 16px; z-index: 20;
+    }
+    .phone-home-bar {
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      width: 80px; height: 4px; background: #fff; border-radius: 2px; opacity: 0.3; z-index: 20;
+    }
+    .phone-screen {
+      width: 100%; height: 100%; background: #fff;
+      overflow-y: scroll; scrollbar-width: none;
+      padding-top: 35px; padding-bottom: 20px;
+      display: flex; flex-direction: column;
+    }
+    .phone-screen::-webkit-scrollbar { display: none; }
+
+    /* --- MINI WEBSITE COMPONENTS (SKELETON UI) --- */
+    /* Header */
+    .w-header { height: 40px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; border-bottom: 1px solid #eee; }
+    .w-logo { width: 60px; height: 10px; background: #333; border-radius: 2px; }
+    .w-ham { width: 16px; height: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+    .w-ham span { width: 100%; height: 2px; background: #333; }
+
+    /* Hero Styles */
+    .w-hero { width: 100%; padding: 30px 15px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+    .w-hero.modern { height: 160px; background: #f4f4f4; align-items: center; text-align: center; }
+    .w-hero.visual { height: 200px; background: #ccc; justify-content: flex-end; padding-bottom: 20px; color: white; }
+    .w-hero.visual::before { content:''; position: absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); }
+    .w-title { width: 70%; height: 14px; background: rgba(0,0,0,0.1); margin-bottom: 8px; border-radius: 4px; z-index: 2; }
+    .w-hero.visual .w-title { background: white; }
+    .w-btn { padding: 6px 16px; background: var(--accent); color: white; border-radius: 20px; font-size: 0.6rem; font-weight: bold; margin-top: 10px; display: inline-block; z-index: 2; }
+    
+    /* Grids */
+    .w-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 15px; }
+    .w-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; padding: 15px; }
+    .w-card { background: #f9f9f9; aspect-ratio: 1; border-radius: 6px; position: relative; overflow: hidden; }
+    .w-card-img { height: 70%; background: #e0e0e0; }
+    .w-card-txt { height: 30%; padding: 5px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .w-line { width: 80%; height: 4px; background: #ddd; border-radius: 2px; }
+
+    /* Lists */
+    .w-list { padding: 15px; }
+    .w-list-item { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+    .w-list-txt { width: 60%; height: 8px; background: #eee; }
+
+    /* Map */
+    .w-map { height: 120px; background: #e6e0d4; position: relative; display: flex; align-items: center; justify-content: center; margin: 15px; border-radius: 8px; }
+    .w-pin { width: 12px; height: 12px; background: #ff5555; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+    /* Form */
+    .w-form { padding: 20px 15px; background: #f8f9fa; }
+    .w-input { width: 100%; height: 30px; border: 1px solid #ddd; background: white; margin-bottom: 8px; border-radius: 4px; }
+
+    /* Footer */
+    .w-footer { background: #222; padding: 20px; margin-top: auto; }
+    .w-f-line { width: 40%; height: 6px; background: #444; margin-bottom: 6px; }
+
+    /* --- CONTROLS --- */
+    .btn-wrap { display: flex; gap: 10px; margin-top: 30px; }
+    .btn {
+      flex: 1; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; font-size: 0.9rem; transition: 0.2s;
+    }
+    .btn-main { background: var(--accent); color: white; box-shadow: 0 4px 15px var(--accent-soft); }
+    .btn-main:hover { transform: translateY(-2px); }
+    .btn-sec { background: transparent; border: 1px solid var(--border); color: var(--text-mute); }
+    .btn-sec:hover { border-color: #fff; color: #fff; }
+
+    .summary-card { background: var(--glass); border: 1px solid var(--border); padding: 25px; border-radius: 16px; margin-top: 20px; }
+    .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--text-mute); font-size: 0.9rem; }
+    .sum-row strong { color: #fff; }
+    .sum-total { font-size: 1.5rem; color: var(--accent); font-family: var(--font-head); text-align: right; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="step-nav">
+      <div class="step-dash active" id="d1"></div>
+      <div class="step-dash" id="d2"></div>
+      <div class="step-dash" id="d3"></div>
+    </div>
+
+    <div id="view-1" class="fade-in">
+      <h1>Choose a Scope</h1>
+      <p class="subtitle">Select a package to start your build.</p>
+      
+      <div class="pkg-grid">
+        <div class="pkg-card" onclick="setPkg('Basic', 1500, this)">
+          <div>
+            <div class="pkg-title">Starter</div>
+            <div class="pkg-desc">One-Page Scroll or Mini Site</div>
+          </div>
+          <div class="pkg-price">$1.5k</div>
+        </div>
+        <div class="pkg-card" onclick="setPkg('Standard', 2500, this)">
+          <div>
+            <div class="pkg-title">Business</div>
+            <div class="pkg-desc">5 Pages + CMS Setup</div>
+          </div>
+          <div class="pkg-price">$2.5k</div>
+        </div>
+        <div class="pkg-card" onclick="setPkg('Premium', 4500, this)">
+          <div>
+            <div class="pkg-title">Commerce</div>
+            <div class="pkg-desc">Full Shop + Automation</div>
+          </div>
+          <div class="pkg-price">$4.5k</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-2" class="hidden fade-in">
+      <h1>Design Lab</h1>
+      <p class="subtitle">Type your industry to generate a layout.</p>
+      
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="industryInput" placeholder="Try 'Coffee', 'Realtor', 'Tattoo'..." oninput="filterIndustries(this.value)">
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <div class="tag-cloud" id="tagCloud">
+        </div>
+
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" id="screen">
+          </div>
+        <div class="phone-home-bar"></div>
+      </div>
+
+      <div class="btn-wrap">
+        <button class="btn btn-sec" onclick="goStep(1)">Back</button>
+        <button class="btn btn-main" onclick="goStep(3)">Finalize Plan</button>
+      </div>
+    </div>
+
+    <div id="view-3" class="hidden fade-in">
+      <h1>Project Snapshot</h1>
+      <p class="subtitle">Your custom blueprint is ready.</p>
+
+      <div class="summary-card">
+        <div class="sum-row"><span>Industry Style</span><strong id="sum-ind">General</strong></div>
+        <div class="sum-row"><span>Package</span><strong id="sum-pkg">Starter</strong></div>
+        <div class="sum-row"><span>Structure</span><strong id="sum-pages">Home, Contact</strong></div>
+        <div class="sum-total" id="sum-total">$1,500</div>
+      </div>
+
+      <p style="text-align:center; font-size:0.8rem; color:var(--text-mute); margin-top:20px;">
+        This is a preliminary scope. Book a consultation to refine designs.
+      </p>
+
+      <div class="btn-wrap">
+        <button class="btn btn-sec" onclick="goStep(2)">Modify</button>
+        <button class="btn btn-main" onclick="alert('In a live site, this would open your calendar!')">Book Consult</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- DATABASE: INDUSTRY & LAYOUTS ---
+    // The "Magic" comes from mapping industries to specific layout arrays
+    const DB = {
+      "Coffee Shop": { type: "cafe", pages: ["Home", "Menu", "Our Story"] },
+      "Restaurant": { type: "dining", pages: ["Home", "Reservations", "Menu"] },
+      "Food Truck": { type: "streetfood", pages: ["Home", "Locations", "Menu"] },
+      "Yoga / Gym": { type: "wellness", pages: ["Home", "Schedule", "Trainers"] },
+      "Spa / Salon": { type: "wellness", pages: ["Home", "Services", "Book"] },
+      "Real Estate": { type: "realty", pages: ["Home", "Listings", "Sell"] },
+      "Construction": { type: "service", pages: ["Home", "Projects", "Quote"] },
+      "Plumbing/HVAC": { type: "service", pages: ["Home", "Services", "Emergency"] },
+      "Law Firm": { type: "corporate", pages: ["Home", "Attorneys", "Case Results"] },
+      "SaaS / Tech": { type: "tech", pages: ["Home", "Features", "Pricing"] },
+      "Portfolio": { type: "creative", pages: ["Home", "Work", "About"] },
+      "Photographer": { type: "visual", pages: ["Home", "Gallery", "Investment"] },
+      "E-Commerce": { type: "retail", pages: ["Home", "Shop", "New Arrivals"] },
+      "Clothing Brand": { type: "retail", pages: ["Home", "Collections", "Lookbook"] },
+      "Tattoo Artist": { type: "visual", pages: ["Home", "Flash", "Booking"] },
+      "Non-Profit": { type: "ngo", pages: ["Home", "Mission", "Donate"] }
+    };
+
+    // --- RENDERERS FOR MINI-COMPONENTS ---
+    const RENDERERS = {
+      header: () => `<div class="w-header"><div class="w-logo"></div><div class="w-ham"><span></span><span></span><span></span></div></div>`,
+      
+      heroModern: (txt="Hello") => `<div class="w-hero modern"><div class="w-title" style="width:40%"></div><div class="w-title"></div><div class="w-btn">${txt}</div></div>`,
+      
+      heroVisual: (txt="Explore") => `<div class="w-hero visual"><div class="w-title"></div><div class="w-btn">${txt}</div></div>`,
+      
+      grid2: () => `<div class="w-grid-2">${Array(4).fill('<div class="w-card"><div class="w-card-img"></div><div class="w-card-txt"><div class="w-line"></div><div class="w-line" style="width:50%"></div></div></div>').join('')}</div>`,
+      
+      gridMasonry: () => `<div class="w-grid-2">${Array(4).fill('').map((_,i) => `<div class="w-card" style="aspect-ratio:${i%2==0 ? '0.8' : '1.2'}"><div class="w-card-img" style="height:100%"></div></div>`).join('')}</div>`,
+
+      listMenu: () => `<div class="w-list">${Array(5).fill('<div class="w-list-item"><div class="w-list-txt"></div><div class="w-list-txt" style="width:20%"></div></div>').join('')}</div>`,
+      
+      map: () => `<div class="w-map"><div class="w-pin"></div></div>`,
+      
+      form: () => `<div class="w-form"><div class="w-input"></div><div class="w-input"></div><div class="w-input"></div><div class="w-btn" style="width:100%; text-align:center">Submit</div></div>`,
+
+      features: () => `<div class="w-grid-3">${Array(6).fill('<div class="w-card" style="background:transparent; box-shadow:none;"><div class="w-card-img" style="height:40px; width:40px; border-radius:50%; margin-bottom:5px;"></div><div class="w-line"></div></div>').join('')}</div>`,
+
+      footer: () => `<div class="w-footer"><div class="w-f-line"></div><div class="w-f-line"></div><div class="w-f-line" style="width:20%; margin-top:10px;"></div></div>`
+    };
+
+    // --- LAYOUT DEFINITIONS ---
+    const LAYOUTS = {
+      cafe: ["header", "heroModern:Order Online", "grid2", "listMenu", "map", "footer"],
+      dining: ["header", "heroVisual:Reserve Table", "listMenu", "grid2", "map", "footer"],
+      streetfood: ["header", "map", "heroModern:Find Us", "listMenu", "footer"],
+      wellness: ["header", "heroVisual:Book Class", "features", "grid2", "footer"],
+      realty: ["header", "form", "heroModern:Search Homes", "grid2", "footer"],
+      service: ["header", "heroModern:Get Quote", "features", "grid2", "form", "footer"],
+      corporate: ["header", "heroVisual:Our Firm", "features", "listMenu", "footer"],
+      tech: ["header", "heroModern:Start Free", "features", "grid2", "footer"],
+      creative: ["header", "heroModern:My Work", "gridMasonry", "form", "footer"],
+      visual: ["header", "heroVisual:Portfolio", "gridMasonry", "footer"],
+      retail: ["header", "heroVisual:Shop Sale", "grid2", "grid2", "footer"],
+      ngo: ["header", "heroVisual:Donate", "features", "form", "footer"]
+    };
+
+    // --- STATE ---
+    let state = { pkg: "Basic", price: 1500, ind: "Coffee Shop", pages: [] };
+
+    // --- APP LOGIC ---
+    function init() {
+      // Populate Tags
+      const cloud = document.getElementById('tagCloud');
+      const popular = ["Coffee Shop", "Real Estate", "Portfolio", "Construction", "Clothing Brand"];
+      popular.forEach(ind => {
+        const t = document.createElement('div');
+        t.className = 'tag';
+        t.innerText = ind;
+        t.onclick = () => selectIndustry(ind);
+        cloud.appendChild(t);
+      });
+      
+      selectIndustry("Coffee Shop"); // Default
+    }
+
+    function setPkg(name, price, el) {
+      state.pkg = name;
+      state.price = price;
+      document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      setTimeout(() => goStep(2), 200);
+    }
+
+    function goStep(n) {
+      [1,2,3].forEach(i => {
+        document.getElementById(`view-${i}`).classList.add('hidden');
+        document.getElementById(`d${i}`).classList.remove('active');
+      });
+      document.getElementById(`view-${n}`).classList.remove('hidden');
+      document.getElementById(`d${n}`).classList.add('active');
+      
+      if(n === 3) updateSummary();
+    }
+
+    function filterIndustries(val) {
+      if(!val) return;
+      const lower = val.toLowerCase();
+      const keys = Object.keys(DB);
+      const match = keys.find(k => k.toLowerCase().includes(lower));
+      if(match) selectIndustry(match);
+    }
+
+    function selectIndustry(name) {
+      state.ind = name;
+      state.pages = DB[name].pages;
+      
+      const type = DB[name].type;
+      const structure = LAYOUTS[type] || LAYOUTS['service'];
+      
+      renderScreen(structure);
+    }
+
+    function renderScreen(blockArray) {
+      const screen = document.getElementById('screen');
+      screen.innerHTML = '';
+      
+      blockArray.forEach(blockStr => {
+        const [funcName, arg] = blockStr.split(':');
+        if(RENDERERS[funcName]) {
+          screen.insertAdjacentHTML('beforeend', RENDERERS[funcName](arg));
+        }
+      });
+    }
+
+    function updateSummary() {
+      document.getElementById('sum-ind').innerText = state.ind;
+      document.getElementById('sum-pkg').innerText = state.pkg;
+      document.getElementById('sum-pages').innerText = state.pages.join(', ');
+      document.getElementById('sum-total').innerText = '$' + state.price.toLocaleString();
+    }
+
+    init();
+  </script>
+</body>
+</html>
